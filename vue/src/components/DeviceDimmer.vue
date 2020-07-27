@@ -2,8 +2,10 @@
 <div class="divDevice">
     <div class="divFavorite" @click="favoriteClick(device)"><i class="icon-favoritesfilling" v-bind:class="{iconC:device.isFavorite}"></i></div>
     <div class="divIcon"><i v-bind:class="[device.icon,{'iconC':device.value>0}]"></i></div>
-    <span class="spanDeviceName">{{device.name}}</span>
-    <span class="spanDeviceSummary">{{device.value}}%</span>
+	<div class="divInfo">
+		<span class="spanDeviceName">{{device.name}}</span>
+		<span class="spanDeviceSummary">{{device.value}}%</span>
+    </div>
     <div class="divControl">
         <el-slider v-model="device.value" :show-tooltip="false" @change="dimmerChange"></el-slider>
     </div>

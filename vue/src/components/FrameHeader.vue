@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="divHeaderLeft">
-      <div class="btnHeader"><i class="icon-mail1"></i></div>
+      <div class="btnHeader" @click="messageClick()"><i class="icon-mail1"></i></div>
     </div>
     <div class="divHeaderMain">
         <img class="imgHeaderLogo" src="../assets/images/logo.png">
@@ -54,6 +54,11 @@ export default {
         }
       }
     },
+    messageClick(){
+      if(this.$route.path!='/message'){
+        this.$router.push({path:'/message'})
+      }
+    }
   }
 }
 </script>

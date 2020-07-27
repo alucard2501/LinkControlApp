@@ -1,11 +1,13 @@
 <template>
-<div class="divDevice">
-    <div class="divFavorite" @click="favoriteClick(device)"><i class="icon-favoritesfilling" v-bind:class="{iconC:device.isFavorite}"></i></div>
+<div class="divDevice" @click="switchClick(device)">
+    <div class="divFavorite" @click.stop="favoriteClick(device)"><i class="icon-favoritesfilling" v-bind:class="{iconC:device.isFavorite}"></i></div>
     <div class="divIcon"><i v-bind:class="[device.icon,{'iconC':device.isOn}]"></i></div>
-    <span class="spanDeviceName">{{device.name}}</span>
-    <span class="spanDeviceSummary">{{device.summary}}</span>
+    <div class="divInfo">
+        <span class="spanDeviceName">{{device.name}}</span>
+        <span class="spanDeviceSummary">{{device.summary}}</span>
+    </div>
     <div class="divControl">
-        <div class="btnSwitch" @click="switchClick(device)"><i class="icon-switch" v-bind:class="{iconC:device.isOn}"></i></div>
+        <div class="btnSwitch"><i class="icon-ls_9_on" v-bind:class="{iconC:device.isOn}"></i></div>
     </div>
 </div>
 </template>

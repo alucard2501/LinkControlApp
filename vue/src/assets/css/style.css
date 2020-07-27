@@ -5,16 +5,17 @@
 body{
     margin: 0;
     padding: 0;
-    background: #f3f3f3;
+    background: #f3f3f3 url('../images/bg.jpg') no-repeat;
+    background-size:cover;
 }
 a {
-    color:#f08611;
+    color:#f08519;
     -webkit-transition: 0.5s;
     -o-transition: 0.5s;
     transition: 0.5s;
 }
 a:hover, a:active, a:focus {
-    color: #f08611;
+    color: #f08519;
     outline: none;
     text-decoration: none;
 }
@@ -37,7 +38,7 @@ h1, h2, h3, h4, h5, h6, figure {
 	left:0;
 	top:0; 
 	padding: 15px 0 10px 0;
-	background:#fff ;
+    background: rgba(255,255,255,0.8);
 	color:#2f2726;
 	position: absolute;
 	z-index: 1;
@@ -66,13 +67,16 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .divHeaderRight{
     width: 25%;
-    padding-right: 5%;
+    padding-right: 2%;
     float: right;
 }
 .btnHeaderFloor{
     margin: 0;
-    padding: 2px 5px;
+    margin-top: -5px;
+    padding: 8px 8px;
     border: none;
+    background: none;
+    text-align: right;
     float: right;
 }
 .btnHeaderFloor span{
@@ -91,6 +95,7 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .popoverFloor{
     background: #2f2726;
+    background: rgba(47,39,38,0.95);
     border: solid 1px #2f2726;
     color:#dfdfdf;
     border-radius: 10px;
@@ -125,7 +130,7 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .popoverFloor ul li .checked i{
     margin-right: 0;
-    color: #f08611;
+    color: #f08519;
     font-size: 1.2em;
 }
 
@@ -137,7 +142,7 @@ h1, h2, h3, h4, h5, h6, figure {
 	left:0;
 	bottom: 0; 
 	padding: 8px 0 6px 0;
-	background:#2f2726 ;
+    background: rgba(47,39,38,0.8);
 	color:#fff;
 	position: absolute;
 	z-index: 1;
@@ -157,7 +162,7 @@ h1, h2, h3, h4, h5, h6, figure {
 .footer ul li i{
 	margin-bottom: 3px;
 	color:#fff;
-	font-size: 1.6em;
+	font-size: 1.2em;
 	display: block;
 }
 .footer ul li span{
@@ -166,10 +171,10 @@ h1, h2, h3, h4, h5, h6, figure {
 	display: block;
 }
 .footer ul li .routerC i{
-	color:#f08611;
+	color:#f08519;
 }
 .footer ul li .routerC span{
-	color:#f08611;
+	color:#f08519;
 }
 
 /* =======================================================
@@ -188,8 +193,8 @@ h1, h2, h3, h4, h5, h6, figure {
  * ======================================================= */
  .divRoomTop{
     width: 96%;
-    padding: 2%;
-    background: #fff;
+    padding: 0 2%;
+    background: rgba(255,255,255,0.8);
     overflow: hidden;
  }
  .divRoomTop ul{
@@ -198,7 +203,7 @@ h1, h2, h3, h4, h5, h6, figure {
 	list-style-type: none; 
 }
 .divRoomTop ul li{
-    padding: 6px 10px;
+    padding: 5px 10px;
     font-size: 0.8em;
     font-weight: 600;
     color:#949494;
@@ -206,77 +211,186 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .divRoomTop ul li.liRoomTopC{
     font-size: 0.9em;
-    color:#2f2726;
+    color:#f08519;
+}
+
+.divRoomTop2{
+   width: 98%;
+   padding: 0 1%;
+   background: rgba(255,255,255,0.8);
+   overflow: hidden;
+}
+.divRoomTop2 ul{
+   margin: 0;
+   padding: 0;
+   list-style-type: none; 
+}
+.divRoomTop2 ul li{
+   padding: 5px 16px;
+   font-size: 1.1em;
+   color:#949494;
+   float: left;
+}
+.divRoomTop2 ul li.liRoomTopC i{
+   color:#f08519;
 }
 
 .divRoom{
-    width: 90%;
-    margin: 0 auto;
+    width: 100%;
     padding-bottom: 30px;
     overflow-y: auto;
+    touch-action: pan-y!important; 
 }
-.divDevice{
+
+.divView{
+    width: 92%;
+    margin: 0 auto;
+    overflow: hidden;
+    touch-action: pan-y!important; 
+}
+.btnGallery, .btnList{
+    padding: 10px 2%;
+    float: right;
+}
+.btnViewC{
+    color: #f08519;
+}
+
+.divRoomContent{
+    width: 90%;
+    margin: 0 auto;
+    overflow: hidden;
+    touch-action: pan-y!important;
+}
+
+
+.divRoomGallery .divDevice{
     width: 39.5%;
     margin-top: 30px;
     margin-right: 5%;
     padding: 10px 4%;
-    background: #2f2726;
+    background: rgba(47,39,38,0.8);
     border-radius: 10px;
     float: left;
     overflow: hidden;
+    touch-action: pan-y!important; 
 }
-.divDevice:nth-child(even){
+.divRoomGallery .divDevice:nth-child(even){
     margin-right: 0
 }
-.divDevice span{
+.divRoomGallery .divDevice span{
     text-align: center;
     display: block;
 }
-.divDevice .divFavorite{
+.divRoomGallery .divDevice .divFavorite{
     width: 20px;
     display: block;
 }
-.divDevice .divFavorite i{
+.divRoomGallery .divDevice .divFavorite i{
     color:#b0b0b0;
     font-size: 0.6em;
 }
-.divDevice .divIcon{
+.divRoomGallery .divDevice .divIcon{
     margin: 16px 0;
     color: #6d6d6d;
     text-align: center;
 }
-.divDevice .divIcon i{
+.divRoomGallery .divDevice .divIcon i{
     font-size: 2.5em;
 }
-.divDevice .spanDeviceName{
+.divRoomGallery .divDevice .divInfo{
+    overflow: hidden;
+}
+.divRoomGallery .divDevice .spanDeviceName{
     color:#fff;
     font-size: 0.95em;
 }
-.divDevice .spanDeviceSummary{
+.divRoomGallery .divDevice .spanDeviceSummary{
     margin-top: 2px;
     color:#6d6d6d;
     font-size: 0.75em;
 }
-.divDevice .divControl{
+.divRoomGallery .divDevice .divControl{
     width: 100%;
     height: 30px;
     margin-top: 18px;
     margin-bottom: 10px;
     text-align: center;
 }
-.divDevice i.iconC{
-    color:#f08611;
+.divRoomGallery .divDevice i.iconC{
+    color:#f08519;
 }
+
+
+.divRoomList .divDevice{
+    width: 92%;
+    padding: 10px 4%;
+    background: rgba(47,39,38,0.8);
+    border-bottom: solid 1px rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    touch-action: pan-y!important; 
+}
+.divRoomList .divDevice:nth-child(even){
+    margin-right: 0
+}
+.divRoomList .divDevice span{
+    display: block;
+}
+.divRoomList .divDevice .divFavorite{
+    width: 3%;
+    margin-top: -3px;
+    float: left;
+}
+.divRoomList .divDevice .divFavorite i{
+    color:#b0b0b0;
+    font-size: 0.6em;
+}
+.divRoomList .divDevice .divIcon{
+    width: 20%;
+    color: #6d6d6d;
+    text-align: center;
+    float: left;
+}
+.divRoomList .divDevice .divIcon i{
+    font-size: 2.5em;
+}
+.divRoomList .divDevice .divInfo{
+    width: 35%;
+    overflow: hidden;
+    float: left;
+}
+.divRoomList .divDevice .spanDeviceName{
+    color:#fff;
+    font-size: 0.95em;
+}
+.divRoomList .divDevice .spanDeviceSummary{
+    margin-top: 2px;
+    color:#6d6d6d;
+    font-size: 0.75em;
+}
+.divRoomList .divDevice .divControl{
+    width: 40%;
+    text-align: right;
+    float: right;
+}
+.divRoomList .divDevice i.iconC{
+    color:#f08519;
+}
+
 
 /* =======================================================
  *  设备控制区 - 开/关
  * ======================================================= */
 .divDevice .divControl .btnSwitch i{
     color:#fff;
-    font-size: 1.2em;
+    font-size: 1.6em;
 }
 .divDevice .divControl .btnSwitch i.iconC{
-    color:#f08611;
+    color:#f08519;
+}
+
+.divRoomList .divDevice .divControl .btnSwitch{
+    margin-top: 10px;
 }
 
 /* =======================================================
@@ -309,6 +423,10 @@ h1, h2, h3, h4, h5, h6, figure {
     margin-right: 0;
 }
 
+.divRoomList .divDevice .divControl .btnCurtain2{
+    width: 35%;
+}
+
 /* =======================================================
  *  设备控制区 - 空调
  * ======================================================= */
@@ -317,7 +435,7 @@ h1, h2, h3, h4, h5, h6, figure {
     line-height: 30px;
 }
 .divDevice .divControl .btnAC i.iconC{
-    color:#f08611;
+    color:#f08519;
 }
 
 .divDevice .divControl .btnAC1{
@@ -329,11 +447,18 @@ h1, h2, h3, h4, h5, h6, figure {
     float: left;
 }
 .divDevice .divControl .btnAC2 i{
-    font-size: 1.2em;
+    font-size: 1.6em;
 }
 .divDevice .divControl .btnAC3{
     width: 25%;
     float: right;
+}
+
+.divRoomList .divDevice .divControl .btnAC{
+    margin-top: 5px;
+}
+.divRoomList .divDevice .divControl .btnAC2{
+    width: 42%;
 }
 
 /* =======================================================
@@ -418,7 +543,7 @@ h1, h2, h3, h4, h5, h6, figure {
     margin: 0 auto;
     padding: 0;
     border-radius: 15px;
-    background: #f08611;
+    background: #f08519;
     border: none;
     color: #fff;
     display: block;
@@ -435,7 +560,7 @@ h1, h2, h3, h4, h5, h6, figure {
     font-size: 1.2em;
 }
 .divDrawerACMode>div i.iconC{
-    color: #f08611;
+    color: #f08519;
 }
 .btnDrawerACSwitch{
     width: 40px;
@@ -445,10 +570,10 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .btnDrawerACSwitch i{
     color: #fff;
-    font-size: 1.5em;
+    font-size: 2em;
 }
 .btnDrawerACSwitch i.iconC{
-    color: #f08611;
+    color: #f08519;
 }
 
 .el-popper[x-placement^=top] .popper__arrow{
@@ -493,7 +618,7 @@ h1, h2, h3, h4, h5, h6, figure {
  * ======================================================= */
  .divUserTop{
      padding: 20px 0;
-     background: #fff;
+     background: rgba(255,255,255,0.8);
      overflow: hidden;
  }
  .divUserFace{
@@ -539,7 +664,7 @@ h1, h2, h3, h4, h5, h6, figure {
  }
  .divUserContent .content{
     padding: 20px;
-    background: #2f2726;
+    background: rgba(47,39,38,0.8);
     color: #d5d5d5;
     border-radius: 10px;
  }
@@ -550,7 +675,7 @@ h1, h2, h3, h4, h5, h6, figure {
  }
  .divUserContent .content ul li{
     padding: 10px 5px;
-    border-bottom: solid 1px #373737;
+    border-bottom: solid 1px #686868;
 }
 .divUserContent .content ul li:last-child{
     border-bottom: none;
@@ -606,7 +731,7 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .drawerBlock ul li .checked i{
     margin-right: 0;
-    color: #f08611;
+    color: #f08519;
     font-size: 1.2em;
 }
 
@@ -633,7 +758,7 @@ h1, h2, h3, h4, h5, h6, figure {
     text-align: center;
 }
 .divTabs .el-tabs__item.is-active {
-    color: #F08611;
+    color: #f08519;
 }
 
 .formTest{
@@ -654,16 +779,16 @@ h1, h2, h3, h4, h5, h6, figure {
     padding: 15px 0;
     left: 0;
     bottom: 0;
-    background: #F08611;
+    background: #f08519;
     border: none;
     border-radius: 0;
     position: fixed;
 }
 .formTest button:hover{
-    background: #F08611;
+    background: #f08519;
 }
 .formTest button:active{
-    background: #F08611;
+    background: #f08519;
 }
 .formTest button span{
     color: #fff;
@@ -690,7 +815,7 @@ h1, h2, h3, h4, h5, h6, figure {
 .divSend>div{
     width: 20%;
     height: 30px;
-    background: #F08611;
+    background: #f08519;
     color: #fff;
     text-align: center;
     font-size: 0.8em;
@@ -701,4 +826,51 @@ h1, h2, h3, h4, h5, h6, figure {
 .divSendMessage{
     margin-top: 10px;
     overflow-y: auto;
+}
+
+
+/* =======================================================
+ *  消息 - message
+ * ======================================================= */
+.divMessage{
+    width: 92%;
+    margin: 0 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.divMessageItem{
+    width: 94%;
+    margin-top: 10px;
+    padding: 10px 3%;
+    background: rgba(47,39,38,0.8);
+    color: #d5d5d5;
+    font-weight: normal;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.divMessageItem:last-child{
+    margin-bottom: 10px;
+}
+.divMessageItem .divTitle i{
+    margin-right: 5px;
+}
+.divMessageItem .divTitle span{
+    font-size: 0.95em;
+}
+.divMessageItem .divDate{
+    margin-top: 2px;
+    margin-bottom: 4px;
+    font-size: 0.8em;
+}
+.divMessageItem .divContent{
+    font-size: 0.9em;
+}
+.tempRoom{
+    width: 100%;
+    background: red;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
 }

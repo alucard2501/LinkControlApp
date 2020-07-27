@@ -4,7 +4,7 @@
 		<li>
 			<router-link to="/favorite" v-bind:class="{routerC:(golbal.menuCur=='favorite')}" active-class = "routerC" tag="div">
 				<i class="icon-favoritesfilling"></i>
-				<span>收藏</span>
+				<span>习惯</span>
 			</router-link>
 		</li>
 		<li>

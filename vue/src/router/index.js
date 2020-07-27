@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import favorite from '@/pages/favorite'
 import room from '@/pages/room'
 import user from '@/pages/user'
+import message from '@/pages/message'
 
 Vue.use(Router)
 
@@ -27,6 +28,11 @@ export default new Router({
       path: '/user',
       name: 'user',
       component: user
+    },
+    {
+      path: '/message',
+      name: 'message',
+      component: message
     }
   ]
 })

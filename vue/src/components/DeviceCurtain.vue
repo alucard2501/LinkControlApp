@@ -2,8 +2,10 @@
 <div class="divDevice">
     <div class="divFavorite" @click="favoriteClick(device)"><i class="icon-favoritesfilling" v-bind:class="{iconC:device.isFavorite}"></i></div>
     <div class="divIcon"><i v-bind:class="[device.icon,{'iconC':device.isOn}]"></i></div>
-    <span class="spanDeviceName">{{device.name}}</span>
-    <span class="spanDeviceSummary">{{device.value==0?'关闭':(device.value==100?'开启':'停止')}}</span>
+    <div class="divInfo">
+        <span class="spanDeviceName">{{device.name}}</span>
+        <span class="spanDeviceSummary">{{device.value==0?'关闭':(device.value==100?'开启':'停止')}}</span>
+    </div>
     <div class="divControl">
         <div class="btnCurtain btnCurtain1" @click="curtainClick(device,0)"><i class="icon-arrow-right"></i><i class="icon-arrow-left"></i></div>
         <div class="btnCurtain btnCurtain2" @click="curtainClick(device,101)"><i class="icon-pause2"></i></div>
