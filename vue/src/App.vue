@@ -81,6 +81,7 @@ export default {
     if(obj!=null){
       this.golbal.myProject = JSON.parse(storage.getItem("myProject"));
     }
+    console.log(this.golbal.myProject);
 
     //选定默认楼栋
     this.golbal.blockCur = this.golbal.myProject.blocks[0];
@@ -116,7 +117,9 @@ export default {
     };
     
     MyFunction.golbal=devicesAll;
-    createSocket(BaseByteDeserializer.receiveData);
+    console.log(this.golbal);
+    MyFunction.MyProject=this.golbal.myProject;
+    //createSocket(BaseByteDeserializer.receiveData);
   }
 }
 

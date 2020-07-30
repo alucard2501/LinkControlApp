@@ -4,6 +4,9 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="BarcodeScanner">
+        <param name="android-package" value="com.phonegap.plugins.barcodescanner.BarcodeScanner" />
+    </feature>
     <name>联克智控</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
@@ -20,5 +23,10 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-intent href="market:*" />
+    <icon density="ldpi" src="res/icon/android/drawable-ldpi/ic_launcher.png" />
+    <icon density="mdpi" src="res/icon/android/drawable-mdpi/ic_launcher.png" />
+    <icon density="hdpi" src="res/icon/android/drawable-hdpi/ic_launcher.png" />
+    <icon density="xhdpi" src="res/icon/android/drawable-xhdpi/ic_launcher.png" />
+    <icon density="xxhdpi" src="res/icon/android/drawable-xxhdpi/ic_launcher.png" />
     <preference name="loglevel" value="DEBUG" />
 </widget>

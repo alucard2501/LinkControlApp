@@ -11,7 +11,7 @@
       <span class="title">管理设置</span>
       <div class="content">
         <ul>
-          <li @click="getData()"><i class="icon-scanning"></i><span>扫一扫获取配置</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
+          <li @click="scanQRCode()"><i class="icon-scanning"></i><span>扫一扫获取配置</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
           <li @click="drawerBlockClick()"><i class="icon-office"></i><span>楼栋管理</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
           <li @click="drawerTestClick()"><i class="icon-wrench"></i><span>调试</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
         </ul>
@@ -113,7 +113,7 @@ export default {
 
     //获取配置
 		async getData(){
-			var response = await axios.post('http://home.ivor-electric.com:3002/api?action=GET_PROJECT_DATA&project_id=3929486');
+			var response = await axios.post('http://home.ivor-electric.com:3002/api?action=GET_PROJECT_APP&project_id=3929486');
       var storage = window.localStorage;
       storage.setItem("myProject", JSON.stringify(response.data.project));
 
@@ -130,6 +130,54 @@ export default {
       }
     },
 
+    async scanQRCode(){
+      var b=true;
+      await this.getData();
+      console.log("start qrcode");
+      return ;
+      // if(cordova==null)b=false;
+      // else if(cordova.plugins==null)b=false;
+      // else if(cordova.plugins.barcodeScanner==null)b=false;
+      // if(!b){
+      //   await this.getData();
+      // }
+      var that=this;
+      cordova.plugins.barcodeScanner.scan(
+        function (result) {
+          // alert("We got a barcode\n" +
+          //   "Result: " + result.text + "\n" +
+          //   "Format: " + result.format + "\n" +
+          //   "Cancelled: " + result.cancelled)
+          var url=result.text.replace("linkcontrol","http");
+          //var response = await axios.post('http://home.ivor-electric.com:3002/api?action=GET_PROJECT_DATA&project_id=3929486');
+          
+          //globalVariable.log("url:" + url);
+          console.log(url);
+          axios.post(url).then(function(response){
+            console.log(response.data.project);
+            var storage = window.localStorage;
+            storage.setItem("myProject", JSON.stringify(response.data.project));
+
+            //初始化数据
+            that.golbal.myProject = response.data.project;
+            that.golbal.blockCur = that.golbal.myProject.blocks[0];
+
+            that.golbal.floorCur = that.golbal.blockCur[0];
+            for(var i=0;i<that.golbal.blockCur.floors.length;i++){
+              var r=that.golbal.blockCur.floors[i];
+              if(r.active){
+                that.golbal.floorCur=r;
+              }
+            }
+          }).catch(function (error) { // 请求失败处理
+              console.log(error);
+          });
+        },
+        function (error) {
+          alert(error)
+        }
+      );
+    },
     //提交绑定
     submitTest() {
       this.golbal.testServer=this.formTest.server;

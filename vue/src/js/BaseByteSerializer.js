@@ -61,6 +61,11 @@ export default {
      * @param {*} device 
      */
     sendAction:function(device){
+        var bus=MyFunction.getVOBus(device.id);
+        if(bus==null){
+            console.log("bus is null");
+            return;
+        }
         var deviceType=Contract.DEVICE_TYPE_ENUM.DEVICE_TYPE_MAIN_ALL;
         var body=[];
         switch(device.type){
@@ -139,8 +144,8 @@ export default {
         var data=this.buildCommand(body,device.areacode,device.addr,deviceType,Contract.FUNCTION_CODE.WRITE + Contract.FUNCTION_CODE.CONTROL);
         //globalVariable.app.onLog("==>" + this.ip +":"+this.port + " " + globalVariable.bytes2hex(data));
         console.log("==>" + " " + MyFunction.bytes2hex(data));
-        createSocket(BaseByteDeserializer.receiveData);
-        sendWSData(Buffer.from(data));
+        var _s=createSocket(BaseByteDeserializer.receiveData,bus.ws_url);
+        sendWSData(Buffer.from(data),_s);
     },
 }
 //Public Function buildCommand(body As Byte(), areacode As Byte, addr As Byte, devicetype As VODeviceBase.DeviceTypeEnum, action As Contract.FUNCTION_CODE) As Byte()
