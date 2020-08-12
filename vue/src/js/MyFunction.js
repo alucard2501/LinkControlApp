@@ -1,7 +1,8 @@
 export default {
     //全局变量
-    golbal:null,
+    devicesAll:null,
     MyProject:null,
+    golbal:null,
     /**字节转十六进制字符 */
     bytes2hex:function(bytes){
         var result="";
@@ -33,6 +34,7 @@ export default {
             }
         }
     },
+
     getVOBus:function(deviceId){
         var project=this.MyProject;
         if(project==null){
@@ -50,4 +52,32 @@ export default {
         }
         return null;
     },
+
+    /** 加载设置开启情况 */
+    getTypeStatus:function(){
+        this.golbal.type[1].isOn=false;
+        this.golbal.type[2].isOn=false;
+        this.golbal.type[3].isOn=false;
+        this.golbal.type[4].isOn=false;
+        for(var i=0;i<this.golbal.roomCur.devices.length;i++){
+            var r=this.golbal.roomCur.devices[i];
+            switch(r.type){
+                case 'light':
+                if(r.isOn)this.golbal.type[1].isOn=true;
+                break;
+                case 'dimmer':
+                if(r.value>0)this.golbal.type[1].isOn=true;
+                break;
+                case 'curtain':
+                if(r.value==100)this.golbal.type[2].isOn=true;
+                break;
+                case 'ac':
+                if(r.isOn)this.golbal.type[3].isOn=true;
+                break;
+                case 'scene':
+                if(r.isOn)this.golbal.type[4].isOn=true;
+                break;
+            }
+        }
+    }
 }

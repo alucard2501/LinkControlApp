@@ -70,6 +70,7 @@
 
 <script>
 import BaseByteSerializer from '../js/BaseByteSerializer'
+import MyFunction from '../js/MyFunction'
 
 export default {
 	data () {
@@ -85,9 +86,17 @@ export default {
 	methods: {
 		favoriteClick(device){
 			device.isFavorite=!device.isFavorite;
+            //if(!device.isFavorite)device.hits=0;
         },
 		switchClick(device){
-			device.isOn=!device.isOn;
+            device.isOn=!device.isOn;
+            MyFunction.getTypeStatus();
+            /*
+            if(device.hits<10){
+                device.hits=device.hits+1;
+                if(device.hits==10)device.isFavorite=true;
+            }
+            */
             BaseByteSerializer.sendAction(this.device);
         },
 		addClick(device){

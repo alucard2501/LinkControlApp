@@ -139,6 +139,22 @@ export default {
                 body.push(0x19);                    //新风设定温度
                 body.push(0x00);                    //实测温度默认 0
                 break;
+
+            case "scene":
+                deviceType=Contract.DEVICE_TYPE_ENUM.DEVICE_TYPE_SCENE;
+
+                /*
+                AA AA 0B 01 01 03 01 42 01 00 49
+                                        通道号
+                                           通道状态：0-关闭 100-开启
+                */
+                var action=0;
+                if(device.isOn)action=100;
+
+                body.push(device.channel);      //通道号
+                body.push(action);              //通道状态
+                break;
+
         }
 
         var data=this.buildCommand(body,device.areacode,device.addr,deviceType,Contract.FUNCTION_CODE.WRITE + Contract.FUNCTION_CODE.CONTROL);

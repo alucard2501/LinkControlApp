@@ -1,14 +1,20 @@
-//import global from "../vbs/GlobalVariable";
+import BaseByteDeserializer from "./BaseByteDeserializer";
 
 const WSS_URL = `ws://192.168.0.119:8001`
 let Socket = ''
 let setIntervalWesocketPush = null
 var list=[];
+var reconn_count=0;
 /**建立连接 */
 export function createSocket(receiveHandler,url) {
   if(list.length>0){
     for(var i=0;i<list.length;i++){
       if(list[i].url==url || list[i].url==(url +"/")){
+        if(list[i].readyState === 3){
+          //实际已断开
+          list.splice(i,1);
+          break;  
+        }
         console.log('已有websocket连接')
         return list[i];
       }
@@ -20,6 +26,7 @@ export function createSocket(receiveHandler,url) {
   s.onmessage = onmessageWS
   s.onerror = onerrorWS
   s.onclose = oncloseWS
+  list.push(s);
     //var that=this;
   window.addEventListener('onmessageWS', function (e) {
     var blob=e.detail.data.data;
@@ -42,6 +49,7 @@ export function createSocket(receiveHandler,url) {
 }
 /**打开WS之后发送心跳 */
 export function onopenWS(e) {
+  reconn_count=0;
   console.log(e);
   for(var i=0;i<list.length;i++){
     sendPing(list[i]);
@@ -50,8 +58,17 @@ export function onopenWS(e) {
 /**连接失败重连 */
 export function onerrorWS(e) {
   clearInterval(setIntervalWesocketPush)
-  Socket.close()
-  createSocket() //重连
+  if(list.indexOf(e.target)>=0){
+    list.splice(list.indexOf(e.target),1);
+  }
+  reconn_count+=1;
+  if(reconn_count>=10){
+    console.log("重连超出10次，重连结束");
+    return;
+  }
+  var url=e.target.url;
+  //Socket.close()
+  createSocket(BaseByteDeserializer.receiveData,url) //重连
 }
 /**WS数据接收统一处理 */
 export function onmessageWS(e) {
@@ -61,26 +78,26 @@ export function onmessageWS(e) {
     }
   }))
 }
-/**发送数据
- * @param eventType
- */
-export function sendWSPush(eventTypeArr) {
-  const obj = {
-    appId: 'airShip',
-    cover: 0,
-    event: eventTypeArr
-  }
-  if (Socket !== null && Socket.readyState === 3) {
-    Socket.close()
-    createSocket() //重连
-  } else if (Socket.readyState === 1) {
-    Socket.send(JSON.stringify(obj))
-  } else if (Socket.readyState === 0) {
-    setTimeout(() => {
-      Socket.send(JSON.stringify(obj))
-    }, 3000)
-  }
-}
+// /**发送数据
+//  * @param eventType
+//  */
+// export function sendWSPush(eventTypeArr) {
+//   const obj = {
+//     appId: 'airShip',
+//     cover: 0,
+//     event: eventTypeArr
+//   }
+//   if (Socket !== null && Socket.readyState === 3) {
+//     Socket.close()
+//     createSocket() //重连
+//   } else if (Socket.readyState === 1) {
+//     Socket.send(JSON.stringify(obj))
+//   } else if (Socket.readyState === 0) {
+//     setTimeout(() => {
+//       Socket.send(JSON.stringify(obj))
+//     }, 3000)
+//   }
+// }
 /**发送ArrayBuffer数据
  * @param data
  */
@@ -90,7 +107,7 @@ export function sendWSData(data,_socket) {
   }
     if (_socket !== null && _socket.readyState === 3) {
       _socket.close()
-      _socket=createSocket() //重连
+      _socket=createSocket(BaseByteDeserializer.receiveData,_socket.url) //重连
     } else if (_socket.readyState === 1) {
       _socket.send(data)
     } else if (_socket.readyState === 0) {

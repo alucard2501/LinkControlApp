@@ -7,8 +7,6 @@
 </template>
 
 <script>
-import "./assets/css/icomoon.css";
-import "./assets/css/style.css";
 import FrameHeader from './components/FrameHeader';
 import FrameFooter from './components/FrameFooter';
 import MyFunction from './js/MyFunction'
@@ -26,6 +24,13 @@ export default {
     return {
       golbal:{
         menuCur:'',
+        type:[
+          {id:1,name:'all',icon:'icon-all',isOn:false},
+          {id:2,name:'light',icon:'icon-ls_1_light',isOn:false},
+          {id:3,name:'curtain',icon:'icon-ls_23_curtain',isOn:false},
+          {id:4,name:'ac',icon:'icon-ls_7_ac',isOn:false},
+          {id:5,name:'scene',icon:'icon-ls_26_go_off_work',isOn:false}
+        ],
         typeCur:'all',
         showButtonFloor:false,
         blockCur:{},
@@ -48,11 +53,12 @@ export default {
                 busId:"7e0378ca-c813-4056-a001-485e2970c001",
                 active:true,
                 devices:[
-                  {id:'b0b502b7-c001-4001-a001-0547116af001',type:"light",areacode:1,addr:1,channel:1,name:"吊灯",summary:"关闭",icon:"icon-ls_1_light",isFavorite:false,isOn:false},
-                  {id:'b0b502b7-c001-4001-a001-0547116af002',type:"light",areacode:1,addr:1,channel:2,name:"壁灯",summary:"开启",icon:"icon-ls_1_light",isFavorite:false,isOn:true},
-                  {id:'b0b502b7-c001-4001-a001-0547116af003',type:"curtain",areacode:1,addr:1,channel:3,name:"窗帘",summary:"50%",icon:"icon-ls_23_curtain",isFavorite:false,value:10},
-                  {id:'b0b502b7-c001-4001-a001-0547116af004',type:"dimmer",areacode:1,addr:1,channel:2,name:"床头灯",summary:"40%",icon:"icon-ls_4_dimmer",isFavorite:false,value:40},
-                  {id:'b0b502b7-c001-4001-a001-0547116af005',type:"ac",name:"空调",summary:"制冷 26℃",icon:"icon-ls_7_ac",isFavorite:true,isOn:false,value:26,mode:'制冷',fan:3,lock:0},
+                  {id:'b0b502b7-c001-4001-a001-0547116af001',type:"light",areacode:1,addr:1,channel:1,name:"吊灯",summary:"关闭",icon:"icon-ls_1_light",isFavorite:false,hits:0,isOn:false},
+                  {id:'b0b502b7-c001-4001-a001-0547116af002',type:"light",areacode:1,addr:1,channel:2,name:"壁灯",summary:"开启",icon:"icon-ls_1_light",isFavorite:false,hits:0,isOn:true},
+                  {id:'b0b502b7-c001-4001-a001-0547116af003',type:"curtain",areacode:1,addr:1,channel:3,name:"窗帘",summary:"50%",icon:"icon-ls_23_curtain",isFavorite:false,hits:0,value:10},
+                  {id:'b0b502b7-c001-4001-a001-0547116af004',type:"dimmer",areacode:1,addr:1,channel:2,name:"床头灯",summary:"40%",icon:"icon-ls_4_dimmer",isFavorite:false,hits:0,value:40},
+                  {id:'b0b502b7-c001-4001-a001-0547116af005',type:"ac",name:"空调",summary:"制冷 26℃",icon:"icon-ls_7_ac",isFavorite:true,hits:0,isOn:false,value:26,mode:'制冷',fan:3,lock:0},
+                  {id:'b0b502b7-c001-4001-a001-0547116af006',type:"scene",areacode:1,addr:1,channel:1,name:"场景",summary:"关闭",icon:"icon-ls_26_go_off_work",isFavorite:false,hits:0,isOn:false},
                 ],
               }]
             }]
@@ -65,6 +71,7 @@ export default {
           {id:3,title:'升级提醒',date:'2020-06-01 15:14:32',content:'为了使用户获得更好的体验，我们刚刚完成了一次热更，请重新启动程序以使更新生效。'},
           {id:4,title:'系统通知',date:'2020-05-28 12:53:43',content:'停服维护已经结束，停服期间给您带来的不便，我们深表歉意。'},
         ],
+        themeCur:1,
       },
     }
   },
@@ -116,10 +123,14 @@ export default {
       }
     };
     
-    MyFunction.golbal=devicesAll;
-    console.log(this.golbal);
+    MyFunction.devicesAll=devicesAll;
+    //console.log(this.golbal);
     MyFunction.MyProject=this.golbal.myProject;
     //createSocket(BaseByteDeserializer.receiveData);
+    MyFunction.golbal=this.golbal;
+    
+    //更换默认房间，加载设置开启情况
+    MyFunction.getTypeStatus();
   }
 }
 

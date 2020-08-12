@@ -4,7 +4,7 @@
       <div class="btnHeader" @click="messageClick()"><i class="icon-mail1"></i></div>
     </div>
     <div class="divHeaderMain">
-        <img class="imgHeaderLogo" src="../assets/images/logo.png">
+        <img class="imgHeaderLogo" src="static/images/logo.png">
     </div>
     <div class="divHeaderRight">
       <el-popover placement="bottom" width="100" trigger="click" v-model="visibleFloor" popper-class="popoverFloor" v-if="golbal.showButtonFloor">
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import MyFunction from '../js/MyFunction'
+
 export default {
 	data () {
 		return {
@@ -51,6 +53,7 @@ export default {
         var r=this.golbal.floorCur.rooms[i];
         if(r.active){
           this.golbal.roomCur=r;
+          MyFunction.getTypeStatus();
         }
       }
     },

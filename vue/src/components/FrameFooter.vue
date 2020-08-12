@@ -10,13 +10,13 @@
 		<li>
 			<router-link to="/room" active-class = "routerC" tag="div">
 				<i class="icon-home3"></i>
-				<span>房间</span>
+				<span>区域</span>
 			</router-link>
 		</li>
 		<li>
 			<router-link to="/user" active-class = "routerC" tag="div">
 				<i class="icon-accountfilling"></i>
-				<span>我</span>
+				<span>我的</span>
 			</router-link>
 		</li>
 	</ul>

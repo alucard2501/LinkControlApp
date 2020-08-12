@@ -7,21 +7,30 @@
 		<span class="spanDeviceSummary">{{device.value}}%</span>
     </div>
     <div class="divControl">
-        <el-slider v-model="device.value" :show-tooltip="false" @change="dimmerChange"></el-slider>
+        <div class="divDimmer1"><el-slider v-model="device.value" :show-tooltip="false" @change="dimmerChange"></el-slider></div>
     </div>
 </div>
 </template>
 
 <script>
 import BaseByteSerializer from '../js/BaseByteSerializer'
+import MyFunction from '../js/MyFunction'
 
 export default {
 	props: ['device'],
 	methods: {
 		favoriteClick(device){
 			device.isFavorite=!device.isFavorite;
+            //if(!device.isFavorite)device.hits=0;
 		},
 		dimmerChange(){
+			/*
+			if(this.device.hits<10){
+                this.device.hits=this.device.hits+1;
+                if(this.device.hits==10)this.device.isFavorite=true;
+			}
+			*/
+            MyFunction.getTypeStatus();
 			BaseByteSerializer.sendAction(this.device);
 		}
 	},

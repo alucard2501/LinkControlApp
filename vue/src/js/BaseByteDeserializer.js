@@ -9,8 +9,8 @@ export default {
 
         if(data.length!=data[2]) return;
 
-        for(var i=0;i<MyFunction.golbal.length;i++){
-            var device=MyFunction.golbal[i].device;
+        for(var i=0;i<MyFunction.devicesAll.length;i++){
+            var device=MyFunction.devicesAll[i].device;
 
             if(data[3]==device.areacode && data[4]==device.addr){   //当前设备
                 if(device.type=="light" && ((data[5]<<8) + data[6]) == Contract.DEVICE_TYPE_ENUM.DEVICE_TYPE_LIGHT){           //灯光
@@ -72,6 +72,15 @@ export default {
                             device.mode="恒温";
                             break;
                     }
+                }else if(device.type=="scene" && ((data[5]<<8) + data[6]) == Contract.DEVICE_TYPE_ENUM.DEVICE_TYPE_SCENE){           //场景
+                    /*
+                    AA AA 0D 01 01 03 01 81 04 00 0F 00 9A
+                                                  状态1：Bit0-7 对应 L1-L8，0 表示关闭，1 表示开启
+                                                     状态2：Bit0-7 对应 L9-L16，0 表示关闭，1 表示开启；
+                    */
+                    var temp=(data[11]<<8)+data[10];
+                    device.isOn=((temp & Math.pow(2,(device.channel-1)))>0);
+
                 }
             }
 

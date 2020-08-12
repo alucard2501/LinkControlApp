@@ -9,10 +9,10 @@
     <div class="divRoomTop2">
       <ul>
         <li v-bind:class="{liRoomTopC:golbal.typeCur=='all'}" @click="typeClick('all')"><i class="icon-all"></i></li>
-        <li v-bind:class="{liRoomTopC:golbal.typeCur=='light'}" @click="typeClick('light')"><i class="icon-ls_1_light"></i></li>
-        <li v-bind:class="{liRoomTopC:golbal.typeCur=='dimmer'}" @click="typeClick('dimmer')"><i class="icon-ls_4_dimmer"></i></li>
-        <li v-bind:class="{liRoomTopC:golbal.typeCur=='curtain'}" @click="typeClick('curtain')"><i class="icon-ls_23_curtain"></i></li>
-        <li v-bind:class="{liRoomTopC:golbal.typeCur=='ac'}" @click="typeClick('ac')"><i class="icon-ls_7_ac"></i></li>
+        <li :class="golbal.typeCur=='light'?'liRoomTopC':(golbal.type[1].isOn?'liRoomTopBlue':'')" @click="typeClick('light')"><i class="icon-ls_1_light"></i></li>
+        <li :class="golbal.typeCur=='curtain'?'liRoomTopC':(golbal.type[2].isOn?'liRoomTopBlue':'')" @click="typeClick('curtain')"><i class="icon-ls_23_curtain"></i></li>
+        <li :class="golbal.typeCur=='ac'?'liRoomTopC':(golbal.type[3].isOn?'liRoomTopBlue':'')" @click="typeClick('ac')"><i class="icon-ls_7_ac"></i></li>
+        <li :class="golbal.typeCur=='scene'?'liRoomTopC':(golbal.type[4].isOn?'liRoomTopBlue':'')" @click="typeClick('scene')"><i class="icon-ls_26_go_off_work"></i></li>
       </ul>
     </div>
     <div class="divRoom" :style="'height:'+heightRoom+'px'">
@@ -24,8 +24,9 @@
         <template v-for="device in golbal.roomCur.devices">
           <DeviceLight v-if="device.type=='light' && (device.type == golbal.typeCur || golbal.typeCur=='all')" v-bind:key="device.id" v-bind:device="device" ></DeviceLight>
           <DeviceCurtain v-if="device.type=='curtain' && (device.type == golbal.typeCur || golbal.typeCur=='all')" v-bind:key="device.id" v-bind:device="device" ></DeviceCurtain>
-          <DeviceDimmer v-if="device.type=='dimmer' && (device.type == golbal.typeCur || golbal.typeCur=='all')" v-bind:key="device.id" v-bind:device="device" ></DeviceDimmer>
+          <DeviceDimmer v-if="device.type=='dimmer' && (device.type == golbal.typeCur || golbal.typeCur=='all' || golbal.typeCur=='light')" v-bind:key="device.id" v-bind:device="device" ></DeviceDimmer>
           <DeviceAC v-if="device.type=='ac' && (device.type == golbal.typeCur || golbal.typeCur=='all')" v-bind:key="device.id" v-bind:device="device"></DeviceAC>
+          <DeviceScene v-if="device.type=='scene' && (device.type == golbal.typeCur || golbal.typeCur=='all')" v-bind:key="device.id" v-bind:device="device" ></DeviceScene>
         </template>
       </div>
     </div>
@@ -38,17 +39,20 @@ import Vue from 'vue'
 import VueTouch from 'vue-touch'
 Vue.use(VueTouch, {name: 'v-touch'})
 
+import MyFunction from '../js/MyFunction'
 import DeviceLight from '../components/DeviceLight';
 import DeviceCurtain from '../components/DeviceCurtain';
 import DeviceDimmer from '../components/DeviceDimmer';
 import DeviceAC from '../components/DeviceAC';
+import DeviceScene from '../components/DeviceScene';
 
 export default {
   components: {
     DeviceLight,
     DeviceCurtain,
     DeviceDimmer,
-    DeviceAC
+    DeviceAC,
+    DeviceScene,
   },
 
 	data () {
@@ -66,6 +70,8 @@ export default {
 			}
       room.active=true;
       this.golbal.roomCur=room;
+
+      MyFunction.getTypeStatus();
     },
 
 		typeClick(type){
