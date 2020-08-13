@@ -3,6 +3,8 @@ export default {
     devicesAll:null,
     MyProject:null,
     golbal:null,
+    logList:[],
+    root:null,
     /**字节转十六进制字符 */
     bytes2hex:function(bytes){
         var result="";
@@ -79,5 +81,54 @@ export default {
                 break;
             }
         }
-    }
+    },
+    
+    log:function(message){
+      //console.log(this.root);
+      console.log(message);
+      var log_date=new Date();
+      this.logList.push(log_date.getHours() + ":" + log_date.getMinutes()+":"+log_date.getSeconds() + " " +  message);
+      if(this.root!=null){
+        this.root.$data.logList=this.logList;
+      }
+    },
+    bytes2hex:function(bytes){
+        var result="";
+        for(var i=0;i<bytes.length;i++){
+            result=result + Buffer.from([bytes[i]]).toString('hex')+ " ";
+        }
+        return result;
+      },
+      bytes2hexNoSpace:function (bytes){
+        var result="";
+        for(var i=0;i<bytes.length;i++){
+            result=result + Buffer.from([bytes[i]]).toString('hex')+ "";
+        }
+        return result;
+      },
+      hexStringToBytes:function (hexString) {
+        if (hexString == null || hexString.length==0) {
+            return null;
+        }
+        hexString = hexString.toUpperCase();
+        var hexs=[];
+        if(hexString.indexOf(" ")>=0){
+            hexs=hexString.trim().split(" ");
+        }else{
+            //hexs=new String[hexString.length()/2];
+            var len=hexString.length/2;
+            for(var i=0;i<len;i++){
+                hexs.push(0x00);
+            }
+            for(var i=0;i<hexs.length;i++){
+                hexs[i]=hexString.substring(i*2, i*2+2);
+            }
+        }
+        var length = hexs.length;
+        var d=[];
+        for (var i = 0; i < length; i++) {
+            d.push(parseInt(hexs[i],16))
+        }
+        return Buffer.from(d);
+      },
 }

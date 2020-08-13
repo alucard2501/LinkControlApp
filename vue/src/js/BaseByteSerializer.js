@@ -10,7 +10,7 @@ export default {
         this.ip=ip;
         this.port=port;
         //globalVariable.app.onLog("切换到" + ip +":"+port);
-        console.log("切换到" + ip +":"+port);
+        MyFunction.log("切换到" + ip +":"+port);
         this.udp_client=new UDP.Client(ip,port);
     },
     /**
@@ -63,7 +63,7 @@ export default {
     sendAction:function(device){
         var bus=MyFunction.getVOBus(device.id);
         if(bus==null){
-            console.log("bus is null");
+            MyFunction.log("bus is null");
             return;
         }
         var deviceType=Contract.DEVICE_TYPE_ENUM.DEVICE_TYPE_MAIN_ALL;
@@ -159,7 +159,7 @@ export default {
 
         var data=this.buildCommand(body,device.areacode,device.addr,deviceType,Contract.FUNCTION_CODE.WRITE + Contract.FUNCTION_CODE.CONTROL);
         //globalVariable.app.onLog("==>" + this.ip +":"+this.port + " " + globalVariable.bytes2hex(data));
-        console.log("==>" + " " + MyFunction.bytes2hex(data));
+        MyFunction.log("==>" + " " + MyFunction.bytes2hex(data));
         var _s=createSocket(BaseByteDeserializer.receiveData,bus.ws_url);
         sendWSData(Buffer.from(data),_s);
     },

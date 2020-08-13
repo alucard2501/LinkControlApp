@@ -1,4 +1,5 @@
 import BaseByteDeserializer from "./BaseByteDeserializer";
+import MyFunction from "./MyFunction"
 
 const WSS_URL = `ws://192.168.0.119:8001`
 let Socket = ''
@@ -7,6 +8,7 @@ var list=[];
 var reconn_count=0;
 /**建立连接 */
 export function createSocket(receiveHandler,url) {
+  MyFunction.log("尝试连接：" + url);
   if(list.length>0){
     for(var i=0;i<list.length;i++){
       if(list[i].url==url || list[i].url==(url +"/")){
@@ -15,7 +17,7 @@ export function createSocket(receiveHandler,url) {
           list.splice(i,1);
           break;  
         }
-        console.log('已有websocket连接')
+        MyFunction.log('已有websocket连接')
         return list[i];
       }
     }
@@ -50,7 +52,7 @@ export function createSocket(receiveHandler,url) {
 /**打开WS之后发送心跳 */
 export function onopenWS(e) {
   reconn_count=0;
-  console.log(e);
+  MyFunction.log(e);
   for(var i=0;i<list.length;i++){
     sendPing(list[i]);
   }
@@ -63,7 +65,7 @@ export function onerrorWS(e) {
   }
   reconn_count+=1;
   if(reconn_count>=10){
-    console.log("重连超出10次，重连结束");
+    MyFunction.log("重连超出10次，重连结束");
     return;
   }
   var url=e.target.url;
@@ -103,7 +105,7 @@ export function onmessageWS(e) {
  */
 export function sendWSData(data,_socket) {
   if(_socket==null){
-    console.log("socket is null");
+    MyFunction.log("socket is null");
   }
     if (_socket !== null && _socket.readyState === 3) {
       _socket.close()
@@ -119,7 +121,7 @@ export function sendWSData(data,_socket) {
 /**关闭WS */
 export function oncloseWS(e) {
   clearInterval(setIntervalWesocketPush)
-  console.log('websocket已断开')
+  MyFunction.log('websocket已断开')
 }
 /**发送心跳 */
 export function sendPing(_socket) {

@@ -1,7 +1,7 @@
 <template>
   <div id="page">
     <FrameHeader v-bind:golbal="golbal"></FrameHeader>
-    <router-view v-bind:golbal="golbal"/>
+    <router-view v-bind:golbal="golbal" v-bind:logs="logList"/>
     <FrameFooter v-bind:golbal="golbal"></FrameFooter>
   </div>
 </template>
@@ -73,6 +73,7 @@ export default {
         ],
         themeCur:1,
       },
+      logList:[],
     }
   },
 
@@ -81,7 +82,26 @@ export default {
         
     },
   },
+  mounted: function () {
+      MyFunction.root=this;
 
+      // console.log(UDP);
+      // if(UDP!=null){
+      //   var client=new UDP.Client("255.255.255.255","1901");
+      //   setTimeout(function(){
+      //     var data=[];
+      //     data.push(0xff);
+      //     data.push(0x01);
+      //     data.push(0x01);
+      //     data.push(0x02);
+      //     client.send(data,function(info){
+      //       MyFunction.log("sended");
+      //     });
+      //   },2000);
+        
+      // }
+      
+  },
   beforeMount(){
     var storage = window.localStorage;
     var obj = storage.getItem("myProject");
@@ -91,25 +111,35 @@ export default {
     console.log(this.golbal.myProject);
 
     //选定默认楼栋
-    this.golbal.blockCur = this.golbal.myProject.blocks[0];
     for(var i=0;i<this.golbal.myProject.blocks.length;i++){
-			var r=this.golbal.myProject.blocks[i];
-			if(r.active)this.golbal.blockCur=r;
+      var block=this.golbal.myProject.blocks[i];
+      block.active=false;
+      for(var j=0;j<block.floors.length;j++){
+				var floor=block.floors[j];
+        floor.active=false;
+        for(var k=0;k<floor.rooms.length;k++){
+          var room=floor.rooms[k];
+          room.active=false;
+          //if(r.active)this.golbal.roomCur=r;
+        }
+      }
+			//if(r.active)this.golbal.blockCur=r;
     }
+    this.golbal.blockCur = this.golbal.myProject.blocks[0];
+    this.golbal.blockCur.active=true;
+    
     
     //选定默认楼层
+    
     this.golbal.floorCur = this.golbal.blockCur.floors[0];
-    for(var i=0;i<this.golbal.blockCur.floors.length;i++){
-				var r=this.golbal.blockCur.floors[i];
-				if(r.active)this.golbal.floorCur=r;
-    }
+    this.golbal.floorCur.active=true;
+    
       
     //选定默认房间
+    
     this.golbal.roomCur = this.golbal.floorCur.rooms[0];
-    for(var i=0;i<this.golbal.floorCur.rooms.length;i++){
-      var r=this.golbal.floorCur.rooms[i];
-      if(r.active)this.golbal.roomCur=r;
-    }
+    this.golbal.roomCur.active=true;
+    
 
     //初始化全部设备数组
     var devicesAll=[];
@@ -131,6 +161,10 @@ export default {
     
     //更换默认房间，加载设置开启情况
     MyFunction.getTypeStatus();
+    for(var i=0;i<this.golbal.myProject.buses.length;i++){
+      var bus=this.golbal.myProject.buses[i];
+      createSocket(BaseByteDeserializer.receiveData,bus.ws_url);
+    }
   }
 }
 

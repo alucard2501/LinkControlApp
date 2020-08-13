@@ -58,7 +58,11 @@
             <div>发送</div>
           </div> -->
           <el-button @click="clearLog">清空</el-button>
-          <div class="divSendMessage" :style="'height:'+heightSendMessage+'px;overflow-y:auto'">{{log}}</div>
+          <div class="divSendMessage" :style="'height:'+heightSendMessage+'px;overflow-y:auto'">
+            <ul class="ulLog">
+                <li v-for="log in logs" v-bind:key="log">{{log}}</li>
+            </ul>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </el-drawer>
@@ -69,7 +73,8 @@
 import axios from 'axios';
 //import { config } from 'vue/types/umd';
 import MyFunction from '../js/MyFunction'
-
+import { createSocket, sendWSPush ,sendWSData} from '../js/WebSocket'
+import BaseByteDeserializer from '../js/BaseByteDeserializer'
 export default {
 	data () {
 		return {
@@ -84,10 +89,10 @@ export default {
         server: '',
       },
       heightSendMessage:window.innerHeight-180,
-      log:"",
+      //log:"",
     }
 	},
-  props: ['golbal'],
+  props: ['golbal','logs'],
   methods: {
     //打开楼栋界面
     drawerBlockClick(){
@@ -147,28 +152,96 @@ export default {
     },
 
     //获取配置
-		async getData(){
-			var response = await axios.post('http://home.ivor-electric.com:3002/api?action=GET_PROJECT_DATA&project_id=3929486');
-      var storage = window.localStorage;
-      storage.setItem("myProject", JSON.stringify(response.data.project));
+		getData(url){
+      var that=this;
+			axios.post(url).then(function(response){
+            try{
+              console.log(response.data.project);
+              var storage = window.localStorage;
+              storage.setItem("myProject", JSON.stringify(response.data.project));
 
-      //初始化数据
-      this.golbal.myProject = response.data.project;
-      this.golbal.blockCur = this.golbal.myProject.blocks[0];
+              //初始化数据
+              that.golbal.myProject = response.data.project;
+              // that.golbal.blockCur = that.golbal.myProject.blocks[0];
 
-      this.golbal.floorCur = this.golbal.blockCur[0];
-      for(var i=0;i<this.golbal.blockCur.floors.length;i++){
-        var r=this.golbal.blockCur.floors[i];
-        if(r.active){
-          this.golbal.floorCur=r;
-        }
-      }
-      this.onLog(JSON.stringify(response.data.project));
-      alert("获取成功");
+              // that.golbal.floorCur = that.golbal.blockCur[0];
+              // for(var i=0;i<that.golbal.blockCur.floors.length;i++){
+              //   var r=that.golbal.blockCur.floors[i];
+              //   if(r.active){
+              //     that.golbal.floorCur=r;
+              //   }
+              // }
+              //选定默认楼栋
+              for(var i=0;i<that.golbal.myProject.blocks.length;i++){
+                var block=that.golbal.myProject.blocks[i];
+                block.active=false;
+                for(var j=0;j<block.floors.length;j++){
+                  var floor=block.floors[j];
+                  floor.active=false;
+                  for(var k=0;k<floor.rooms.length;k++){
+                    var room=floor.rooms[k];
+                    room.active=false;
+                    //if(r.active)this.golbal.roomCur=r;
+                  }
+                }
+                //if(r.active)this.golbal.blockCur=r;
+              }
+              that.golbal.blockCur = that.golbal.myProject.blocks[0];
+              that.golbal.blockCur.active=true;
+              
+              
+              //选定默认楼层
+              
+              that.golbal.floorCur = that.golbal.blockCur.floors[0];
+              that.golbal.floorCur.active=true;
+              
+                
+              //选定默认房间
+              
+              that.golbal.roomCur = that.golbal.floorCur.rooms[0];
+              that.golbal.roomCur.active=true;
+
+              //初始化全部设备数组
+              var devicesAll=[];
+              for(var i=0;i<that.golbal.myProject.blocks.length;i++){
+                for(var j=0;j<that.golbal.myProject.blocks[i].floors.length;j++){
+                  for(var k=0;k<that.golbal.myProject.blocks[i].floors[j].rooms.length;k++){
+                    for(var z=0;z<that.golbal.myProject.blocks[i].floors[j].rooms[k].devices.length;z++){
+                      devicesAll.push({device:that.golbal.myProject.blocks[i].floors[j].rooms[k].devices[z],busId:that.golbal.myProject.blocks[i].floors[j].rooms[k].busId});
+                    }
+                  }
+                }
+              };
+              
+              MyFunction.devicesAll=devicesAll;
+              //console.log(this.golbal);
+              MyFunction.MyProject=that.golbal.myProject;
+              //createSocket(BaseByteDeserializer.receiveData);
+              MyFunction.golbal=that.golbal;
+              
+              //更换默认房间，加载设置开启情况
+              MyFunction.getTypeStatus();
+              for(var i=0;i<that.golbal.myProject.buses.length;i++){
+                var bus=that.golbal.myProject.buses[i];
+                createSocket(BaseByteDeserializer.receiveData,bus.ws_url);
+              }
+
+              //that.onLog(JSON.stringify(response.data.procdject));
+              alert("获取成功")
+            }catch(e){
+              that.onLog(e);
+              alert("获取失败")
+            }
+            
+          }).catch(function (error) { // 请求失败处理
+              console.log(error);
+              that.onLog(error);
+              alert("获取失败")
+          });
     },
-    async scanQRCode(){
+    scanQRCode(){
       // var b=true;
-      // await this.getData();
+      // this.getData('https://app.haodawu.cn/api?action=GET_PROJECT_APP&project_id=3929490');
       // console.log("start qrcode");
       // return ;
       var that=this;
@@ -183,35 +256,7 @@ export default {
           
           //globalVariable.log("url:" + url);
           console.log(url);
-          axios.post(url).then(function(response){
-            try{
-              console.log(response.data.project);
-              var storage = window.localStorage;
-              storage.setItem("myProject", JSON.stringify(response.data.project));
-
-              //初始化数据
-              that.golbal.myProject = response.data.project;
-              that.golbal.blockCur = that.golbal.myProject.blocks[0];
-
-              that.golbal.floorCur = that.golbal.blockCur[0];
-              for(var i=0;i<that.golbal.blockCur.floors.length;i++){
-                var r=that.golbal.blockCur.floors[i];
-                if(r.active){
-                  that.golbal.floorCur=r;
-                }
-              }
-              that.onLog(JSON.stringify(response.data.project));
-              alert("获取成功")
-            }catch(e){
-              that.onLog(e);
-              alert("获取失败")
-            }
-            
-          }).catch(function (error) { // 请求失败处理
-              console.log(error);
-              that.onLog(error);
-              alert("获取失败")
-          });
+          that.getData(url);
         },
         function (error) {
           alert(error)
@@ -223,11 +268,12 @@ export default {
       this.golbal.testServer=this.formTest.server;
     },
     clearLog(){
-      this.log="";
+      //MyFunction.log("测试")
+      this.logs=[];
     },
-    onLog(text){
-      this.log=text+ "\n" + this.log;
-    }
+    // onLog(text){
+    //   this.log=text+ "\n" + this.log;
+    // }
 	},
   mounted(){
     this.golbal.showButtonFloor=false;

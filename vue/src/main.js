@@ -4,6 +4,8 @@ import Vue from 'vue'
 import ElementUI from 'element-ui';
 import App from './App'
 import router from './router'
+import UDP from './js/UDP'
+import UDPClient from './js/client'
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false
