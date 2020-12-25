@@ -28,7 +28,28 @@ export default {
          */
         DEVICE_TYPE_LIGHT_SCENE:0x0305,
         /**
-         * 开关+情景组合面板
+         * 调光+情景组合面板
+         */
+        DEVICE_TYPE_DIMMER_SCENE:0x0306,
+        /**
+         * 窗帘+情景组合面板
+         */
+        DEVICE_TYPE_CURTAIN_SCENE:0x0307,
+        /**
+         * 开关+调光+情景组合面板
+         */
+        DEVICE_TYPE_LIGHT_DIMMER_SCENE:0x0308,
+        /**
+         * 开关+窗帘+情景组合面板
+         */
+        DEVICE_TYPE_LIGHT_CURTAIN_SCENE:0x0309,
+        /**
+         * 调光+窗帘+情景组合面板
+         */
+        DEVICE_TYPE_DIMMER_CURTAIN_SCENE:0x030A,
+
+        /**
+         * 空调面板
          */
         DEVICE_TYPE_AC:0x0401
 

@@ -1,14 +1,14 @@
 <template>
-<div class="divDevice" @click="switchClick(device)">
-    <div class="divFavorite" @click.stop="favoriteClick(device)"><i class="icon-favoritesfilling" v-bind:class="{iconC:device.isFavorite}"></i></div>
-    <div class="divIcon"><i v-bind:class="[device.icon,{'iconC':device.isOn}]"></i></div>
-    <div class="divInfo">
-        <span class="spanDeviceName">{{device.name}}</span>
-        <span class="spanDeviceSummary">{{device.isOn?'开启':'关闭'}}</span>
-    </div>
-    <div class="divControl">
-        <div class="btnSwitch"><i class="icon-ls_9_on" v-bind:class="{iconC:device.isOn}"></i></div>
-    </div>
+<div class="divDevice"  >
+        <div class="divFavorite" @click.stop="favoriteClick(device)"><i class="icon-favoritesfilling" v-bind:class="{iconC:device.isFavorite}"></i></div>
+        <v-touch tag="div" class="divIcon" v-on:tap="switchClick(device)"><i v-bind:class="[device.icon,{'iconC':device.isOn}]"></i></v-touch>
+        <v-touch tag="div" class="divInfo" v-on:tap="switchClick(device)">
+            <span class="spanDeviceName">{{device.name}}</span>
+            <span class="spanDeviceSummary">{{device.isOn?'开启':'关闭'}}</span>
+        </v-touch>
+        <v-touch tag="div" class="divControl" v-on:tap="switchClick(device)">
+            <div class="btnSwitch"><i class="icon-ls_9_on" v-bind:class="{iconC:device.isOn}"></i></div>
+        </v-touch>
 </div>
 </template>
 
@@ -24,10 +24,12 @@ export default {
 	props: ['device'],
 	methods: {
 		favoriteClick(device){
-			device.isFavorite=!device.isFavorite;
+            device.isFavorite=!device.isFavorite;
+            MyFunction.saveProject();
             //if(!device.isFavorite)device.hits=0;
         },
 		switchClick(device){
+            console.log("click");
             device.isOn=!device.isOn;
             MyFunction.getTypeStatus();
             /*

@@ -2,6 +2,10 @@
 /* =======================================================
  *  基本框架
  * ======================================================= */
+ *:not(input,textarea) {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none; /* Disable selection/Copy of UIWebView */
+}
 body{
     margin: 0;
     padding: 0;
@@ -61,6 +65,7 @@ h1, h2, h3, h4, h5, h6, figure {
     left: 31%;
     padding-top: 1px;
     position: absolute;
+    text-align: center;
 }
 .imgHeaderLogo{
     width: 100%;
@@ -137,6 +142,9 @@ h1, h2, h3, h4, h5, h6, figure {
     margin-right: 0;
     color: #f08519;
     font-size: 1.2em;
+}
+.popoverFloor ul li.liBlue{
+    color:#3b91f3;
 }
 
 /* =======================================================
@@ -215,8 +223,10 @@ h1, h2, h3, h4, h5, h6, figure {
     float: left;
 }
 .divRoomTop ul li.liRoomTopC{
-    font-size: 0.9em;
     color:#f08519;
+}
+.divRoomTop ul li.liRoomTopBlue{
+    color:#3b91f3;
 }
 
 .divRoomTop2{
@@ -240,13 +250,13 @@ h1, h2, h3, h4, h5, h6, figure {
    color:#f08519;
 }
 .divRoomTop2 ul li.liRoomTopBlue i{
-   color:#0ff7ff;
+   color:#3b91f3;
 }
 
 .divRoom{
     width: 100%;
     padding-bottom: 30px;
-    overflow-y: auto;
+    overflow-y: hidden;
     touch-action: pan-y!important; 
 }
 
@@ -268,19 +278,22 @@ h1, h2, h3, h4, h5, h6, figure {
 .divRoomContent{
     width: 90%;
     margin: 0 auto;
-    overflow: hidden;
+    overflow: auto;
     touch-action: pan-y!important;
 }
 
-
+.divRoomGallery{
+    margin-top: -15px;
+}
 .divRoomGallery .divDevice{
     width: 39%;
-    margin-top: 30px;
+    margin-top: 20px;
     padding: 10px 4%;
     border: solid 1px #fff;
     border-radius: 10px;
     overflow: hidden;
     touch-action: pan-y!important; 
+    position: relative;
 }
 .divRoomGallery .divDevice:nth-child(odd){
     float: left;
@@ -298,13 +311,14 @@ h1, h2, h3, h4, h5, h6, figure {
 .divRoomGallery .divDevice .divFavorite{
     width: 20px;
     display: block;
+    position: absolute;
 }
 .divRoomGallery .divDevice .divFavorite i{
     color:#fff;
     font-size: 0.6em;
 }
 .divRoomGallery .divDevice .divIcon{
-    margin: 16px 0;
+    margin: 10px 0;
     color: #fff;
     text-align: center;
 }
@@ -327,9 +341,9 @@ h1, h2, h3, h4, h5, h6, figure {
 .divRoomGallery .divDevice .divControl{
     width: 100%;
     height: 30px;
-    margin-top: 18px;
-    margin-bottom: 10px;
+    margin-top: 10px;
     text-align: center;
+    overflow: hidden;
 }
 .divRoomGallery .divDevice i.iconC{
     color:#f08519;
@@ -339,7 +353,7 @@ h1, h2, h3, h4, h5, h6, figure {
 .divRoomList .divDevice{
     width: 92%;
     padding: 10px 4%;
-    background: rgba(47,39,38,0.8);
+    background: rgba(47,39,38,0);
     border-bottom: solid 1px rgba(255, 255, 255, 0.2);
     overflow: hidden;
     touch-action: pan-y!important; 
@@ -414,8 +428,8 @@ h1, h2, h3, h4, h5, h6, figure {
  *  设备控制区 - 调光
  * ======================================================= */
 .divDevice .divControl .divDimmer1{
-    width: 100%;
-    float: left;
+    width: 80%;
+    padding:0 10%;
 }
 .divDevice .divControl .divDimmer2{
     width: 25%;
@@ -579,7 +593,7 @@ h1, h2, h3, h4, h5, h6, figure {
     margin: 0 auto;
     padding: 0;
     border-radius: 15px;
-    background: #f08519;
+    background: none;
     border: none;
     color: #fff;
     display: block;
@@ -649,6 +663,74 @@ h1, h2, h3, h4, h5, h6, figure {
     margin-right: 15px;
 }
 
+
+.divDrawerHeatingMode{
+    width: 70%;
+    margin: 0 auto;
+    margin-bottom: 60px;
+    line-height: 30px;
+    overflow: hidden;
+}
+.divDrawerHeatingMode .divDrawerACModeC .btnDeviceAcFan{
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    padding: 0;
+    border-radius: 15px;
+    background: none;
+    border: none;
+    color: #fff;
+    display: block;
+}
+.divDrawerHeatingMode .divDrawerACModeC .btnDeviceAcFan i{
+    line-height: 30px;
+}
+.divDrawerHeatingMode>div{
+    width: 100%;
+    text-align: center;
+}
+.divDrawerHeatingMode>div i{
+    font-size: 1.2em;
+}
+.divDrawerHeatingMode>div i.iconC{
+    color: #f08519;
+}
+
+
+.divDrawerFanMode{
+    width: 40%;
+    margin: 0 auto;
+    margin-bottom: 60px;
+    line-height: 30px;
+    overflow: hidden;
+}
+.divDrawerFanMode .divDrawerACModeC .btnDeviceAcFan{
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    padding: 0;
+    border-radius: 15px;
+    background: none;
+    border: none;
+    color: #fff;
+    display: block;
+}
+.divDrawerFanMode .divDrawerACModeC .btnDeviceAcFan i{
+    line-height: 30px;
+}
+.divDrawerFanMode>div{
+    width: 50%;
+    text-align: center;
+    float: left;
+}
+.divDrawerFanMode>div i{
+    font-size: 1.2em;
+}
+.divDrawerFanMode>div i.iconC{
+    color: #f08519;
+}
+
+
 /* =======================================================
  *  用户 - user
  * ======================================================= */
@@ -701,7 +783,7 @@ h1, h2, h3, h4, h5, h6, figure {
  }
  .divUserContent .content{
     padding: 20px;
-    background: rgba(47,39,38,0.8);
+    background: rgba(47,39,38,0);
     color: #fff;
     border-radius: 10px;
  }
@@ -733,6 +815,8 @@ h1, h2, h3, h4, h5, h6, figure {
     background: #2f2726;
     color:#dfdfdf;
     outline: none;
+    width:100%;
+    height:100%;
 }
 .drawerBlock span{
     color: #7d7d7d;
@@ -777,6 +861,8 @@ h1, h2, h3, h4, h5, h6, figure {
     background: #2f2726;
     color:#dfdfdf;
     outline: none;
+    width:100%;
+    height:100%;
 }
 .drawerTheme span{
     color: #7d7d7d;
@@ -834,6 +920,8 @@ h1, h2, h3, h4, h5, h6, figure {
     background: #2f2726;
     color:#dfdfdf;
     outline: none;
+    width:100%;
+    height:100%;
 }
 .drawerTest span{
     color: #7d7d7d;
@@ -924,6 +1012,60 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 
 
+.drawerGateway{
+    background: #2f2726;
+    color:#dfdfdf;
+    outline: none;
+    width:100%;
+    height:100%;
+}
+.drawerGateway span{
+    color: #7d7d7d;
+    font-size: 0.8em;
+    outline: none;
+}
+.drawerGateway ul{
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 10px;
+    padding: 0;
+    list-style-type: none;
+}
+.drawerGateway ul li{
+    padding: 10px 10px;
+    border-bottom: solid 1px #373737;
+    font-size: 0.9em;
+    overflow: hidden;
+}
+.drawerGateway ul li:last-child{
+    border-bottom: none;
+}
+.drawerGateway ul li span{
+    margin-right: 15px;
+    padding-left: 2px;
+    color:#dfdfdf;
+    font-size: 0.9em;
+}
+.drawerGateway ul li i{
+    margin-right: 15px;
+}
+.divGateway1{
+    width: 35%;
+    overflow: hidden;
+    float: left;
+}
+.divGateway2{
+    width: 50%;
+    overflow: hidden;
+    float: left;
+}
+.divGateway3{
+    width: 15%;
+    overflow: hidden;
+    float: left;
+}
+
+
 /* =======================================================
  *  消息 - message
  * ======================================================= */
@@ -960,6 +1102,17 @@ h1, h2, h3, h4, h5, h6, figure {
 .divMessageItem .divContent{
     font-size: 0.9em;
 }
+
+.divMessageItem .btnDelete{
+    top: 10px;
+    right: 10px;
+    color: #f08519;
+    position: absolute;
+}
+.divMessageItem .btnDelete i{
+    font-size: 1.2em;
+}
+
 .tempRoom{
     width: 100%;
     background: red;
@@ -969,3 +1122,39 @@ h1, h2, h3, h4, h5, h6, figure {
     left: 0;
     z-index: -1;
 }
+
+/* =======================================================
+ *  关于 - about
+ * ======================================================= */
+ .drawerAbout{
+    background: #2f2726;
+    color:#dfdfdf;
+    outline: none;
+    width:100%;
+    height:100%;
+ }
+.divAboutLogo,.divAboutAppname,.divAboutVersion{
+    width:50%;
+    text-align: center;
+    margin-left: 25%;
+    color:#bdbdbd;
+  }
+  .divAboutLogo img{
+    width:128px;
+  }
+  .divAboutAppname{
+    font-size: 2em;
+  }
+  .divAboutVersion{
+    font-size: 1.5em;
+  }
+  .hrAbout{
+    width: 96%;
+  }
+  .ulLog{
+    color:#ffffff;
+  }
+  .ulLog li{
+    list-style: none;
+    font-size: 1em;
+  }

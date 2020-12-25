@@ -1,6 +1,14 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
   module.exports = [
     {
+      "id": "cordova-plugin-splashscreen.SplashScreen",
+      "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+      "pluginId": "cordova-plugin-splashscreen",
+      "clobbers": [
+        "navigator.splashscreen"
+      ]
+    },
+    {
       "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
       "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
       "pluginId": "phonegap-plugin-barcodescanner",
@@ -9,11 +17,11 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       ]
     },
     {
-      "id": "cordova-plugin-splashscreen.SplashScreen",
-      "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
-      "pluginId": "cordova-plugin-splashscreen",
+      "id": "cordova-plugin-chrome-apps-sockets-udp.sockets.udp",
+      "file": "plugins/cordova-plugin-chrome-apps-sockets-udp/sockets.udp.js",
+      "pluginId": "cordova-plugin-chrome-apps-sockets-udp",
       "clobbers": [
-        "navigator.splashscreen"
+        "chrome.sockets.udp"
       ]
     },
     {
@@ -40,19 +48,21 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "pluginId": "cordova-plugin-chrome-apps-common"
     },
     {
-      "id": "cordova-plugin-chrome-apps-sockets-udp.sockets.udp",
-      "file": "plugins/cordova-plugin-chrome-apps-sockets-udp/sockets.udp.js",
-      "pluginId": "cordova-plugin-chrome-apps-sockets-udp",
+      "id": "cordova-plugin-networkinterface.networkinterface",
+      "file": "plugins/cordova-plugin-networkinterface/www/networkinterface.js",
+      "pluginId": "cordova-plugin-networkinterface",
       "clobbers": [
-        "chrome.sockets.udp"
+        "window.networkinterface"
       ]
     }
   ];
   module.exports.metadata = {
-    "cordova-plugin-whitelist": "1.3.4",
-    "phonegap-plugin-barcodescanner": "8.1.0",
     "cordova-plugin-splashscreen": "6.0.0",
+    "phonegap-plugin-barcodescanner": "8.1.0",
+    "cordova-plugin-chrome-apps-sockets-udp": "1.3.0",
     "cordova-plugin-chrome-apps-common": "1.0.7",
-    "cordova-plugin-chrome-apps-sockets-udp": "1.3.0"
+    "cordova-plugin-whitelist": "1.3.4",
+    "cordova-plugin-networkinterface": "2.0.0",
+    "cordova-plugin-wkwebview-engine": "1.2.1"
   };
 });

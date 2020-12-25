@@ -7,16 +7,22 @@
     "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-whitelist": {
+    "cordova-plugin-splashscreen": {
       "PACKAGE_NAME": "com.linkscene.app"
     },
     "phonegap-plugin-barcodescanner": {
       "PACKAGE_NAME": "com.linkscene.app"
     },
-    "cordova-plugin-splashscreen": {
+    "cordova-plugin-chrome-apps-sockets-udp": {
       "PACKAGE_NAME": "com.linkscene.app"
     },
-    "cordova-plugin-chrome-apps-sockets-udp": {
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.linkscene.app"
+    },
+    "cordova-plugin-networkinterface": {
+      "PACKAGE_NAME": "com.linkscene.app"
+    },
+    "cordova-plugin-wkwebview-engine": {
       "PACKAGE_NAME": "com.linkscene.app"
     }
   },

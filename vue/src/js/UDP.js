@@ -1,7 +1,7 @@
 import MyFunction from './MyFunction'
 var UDP = {
     // Helper function to create a new socket
-    createSocket: function(address, port, callback) {
+    createSocket: function(address, port,receivecallback, callback) {
       MyFunction.log("create socket address:" + address + ",port:" + port);
       MyFunction.log(chrome);
         if(chrome==null)return;
@@ -10,9 +10,17 @@ var UDP = {
         MyFunction.log(chrome.sockets.udp);
         if(chrome.sockets.udp==null)return;
         chrome.sockets.udp.create(function(socket) {
-            chrome.sockets.udp.bind(socket.socketId, address, port, function() {
-                callback(socket, chrome.sockets.udp);
+          console.log("listener:" + receivecallback);
+          chrome.sockets.udp.onReceive.addListener(receivecallback);
+          chrome.sockets.udp.bind(socket.socketId, address, port, function() {
+            chrome.sockets.udp.setBroadcast(socket.socketId,true,function(){
+              console.log("setBroadcast success")
             });
+            if(callback!=null){
+              callback(socket, chrome.sockets.udp);
+            }
+            
+          });
         });
     },
   

@@ -4,14 +4,15 @@
       <div class="btnHeader" @click="messageClick()"><i class="icon-mail1"></i></div>
     </div>
     <div class="divHeaderMain">
-        <img class="imgHeaderLogo" src="static/images/logo.png">
+        <!-- <img class="imgHeaderLogo" src="static/images/logo.png"> -->
+      {{golbal.myProject.name}}
     </div>
     <div class="divHeaderRight">
       <el-popover placement="bottom" width="100" trigger="click" v-model="visibleFloor" popper-class="popoverFloor" v-if="golbal.showButtonFloor">
         <div>
           <span class="spanTitle">请选择楼层</span>
           <ul>
-            <li v-for="floor in golbal.blockCur.floors" v-bind:key="floor.id" @click="floorClick(floor)">
+            <li v-for="floor in golbal.blockCur.floors" v-bind:key="floor.id" @click="floorClick(floor)" :class="floor.isOn?'liBlue':''">
               <i class="icon-office"></i><span>{{floor.name}}</span>
               <div class="checked" v-if="floor.active"><i class="icon-yuanxingxuanzhongfill"></i></div>
             </li>
@@ -47,15 +48,18 @@ export default {
       this.golbal.floorCur=floor;
       this.visibleFloor=false;
 
-      //选定默认房间
+      //选定默认房间-第一个房间
       this.golbal.roomCur = this.golbal.floorCur.rooms[0];
       for(var i=0;i<this.golbal.floorCur.rooms.length;i++){
         var r=this.golbal.floorCur.rooms[i];
-        if(r.active){
-          this.golbal.roomCur=r;
-          MyFunction.getTypeStatus();
+        if(i==0){
+          r.active=true;
+        }else{
+          r.active=false;
         }
       }
+      MyFunction.sendQueryDeviceStatus();
+      MyFunction.getTypeStatus();
     },
     messageClick(){
       if(this.$route.path!='/message'){

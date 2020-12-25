@@ -1,32 +1,34 @@
 <template>
   <div class="main">
-    <v-touch @swipeleft="onSwipeLeft" @swiperight="onSwipeRight" tag="div" style="touch-action: pan-y!important;">
+    <v-touch @swipeleft="onSwipe(1)" @swiperight="onSwipe(2)" tag="div" style="touch-action: pan-y!important;">
     <div class="divRoomTop">
-      <ul>
-        <li v-for="room in golbal.floorCur.rooms" v-bind:key="room.id" v-bind:class="{liRoomTopC:room.active}" @click="roomClick(room)">{{room.name}}</li>
+      <ul :style="'width:' + ul_width + 'px'" ref="ul_room">
+        <li v-for="room in golbal.floorCur.rooms" v-bind:key="room.id" :class="room.active?'liRoomTopC':(room.isOn?'liRoomTopBlue':'')" @click="roomClick(room)">{{room.name}}</li>
       </ul>
     </div>
     <div class="divRoomTop2">
       <ul>
         <li v-bind:class="{liRoomTopC:golbal.typeCur=='all'}" @click="typeClick('all')"><i class="icon-all"></i></li>
-        <li :class="golbal.typeCur=='light'?'liRoomTopC':(golbal.type[1].isOn?'liRoomTopBlue':'')" @click="typeClick('light')"><i class="icon-ls_1_light"></i></li>
-        <li :class="golbal.typeCur=='curtain'?'liRoomTopC':(golbal.type[2].isOn?'liRoomTopBlue':'')" @click="typeClick('curtain')"><i class="icon-ls_23_curtain"></i></li>
-        <li :class="golbal.typeCur=='ac'?'liRoomTopC':(golbal.type[3].isOn?'liRoomTopBlue':'')" @click="typeClick('ac')"><i class="icon-ls_7_ac"></i></li>
-        <li :class="golbal.typeCur=='scene'?'liRoomTopC':(golbal.type[4].isOn?'liRoomTopBlue':'')" @click="typeClick('scene')"><i class="icon-ls_26_go_off_work"></i></li>
+        <li v-if="hasType('light')" :class="golbal.typeCur=='light'?'liRoomTopC':(golbal.type[1].isOn?'liRoomTopBlue':'')" @click="typeClick('light')"><i class="icon-ls_1_light"></i></li>
+        <li v-if="hasType('curtain')" :class="golbal.typeCur=='curtain'?'liRoomTopC':(golbal.type[2].isOn?'liRoomTopBlue':'')" @click="typeClick('curtain')"><i class="icon-ls_23_curtain"></i></li>
+        <li v-if="hasType('ac')" :class="golbal.typeCur=='ac'?'liRoomTopC':(golbal.type[3].isOn?'liRoomTopBlue':'')" @click="typeClick('ac')"><i class="icon-air-conditioner"></i></li>
+        <li v-if="hasType('scene')" :class="golbal.typeCur=='scene'?'liRoomTopC':(golbal.type[4].isOn?'liRoomTopBlue':'')" @click="typeClick('scene')"><i class="icon-ls_26_go_off_work"></i></li>
       </ul>
     </div>
     <div class="divRoom" :style="'height:'+heightRoom+'px'">
       <div class="divView">
-        <div :class="'btnList'+ (!isGallery?' btnViewC':'')" @click="isGallery=false"><i class="icon-viewlist"></i></div>
-        <div :class="'btnGallery'+ (isGallery?' btnViewC':'')" @click="isGallery=true"><i class="icon-viewgallery"></i></div>
+        <div :class="'btnList'+ (!golbal.isGallery?' btnViewC':'')" @click="setView(false)"><i class="icon-viewlist"></i></div>
+        <div :class="'btnGallery'+ (golbal.isGallery?' btnViewC':'')" @click="setView(true)"><i class="icon-viewgallery"></i></div>
       </div>
-      <div :class="'divRoomContent'+ (isGallery?' divRoomGallery':' divRoomList')">
+      <div :class="'divRoomContent'+ (golbal.isGallery?' divRoomGallery':' divRoomList')" :style="'height:'+(heightRoom-14)+'px'">
         <template v-for="device in golbal.roomCur.devices">
-          <DeviceLight v-if="device.type=='light' && (device.type == golbal.typeCur || golbal.typeCur=='all')" v-bind:key="device.id" v-bind:device="device" ></DeviceLight>
+          <DeviceLight  v-if="device.type=='light' && (device.type == golbal.typeCur || golbal.typeCur=='all')" v-bind:key="device.id" v-bind:device="device" ></DeviceLight>
           <DeviceCurtain v-if="device.type=='curtain' && (device.type == golbal.typeCur || golbal.typeCur=='all')" v-bind:key="device.id" v-bind:device="device" ></DeviceCurtain>
-          <DeviceDimmer v-if="device.type=='dimmer' && (device.type == golbal.typeCur || golbal.typeCur=='all' || golbal.typeCur=='light')" v-bind:key="device.id" v-bind:device="device" ></DeviceDimmer>
+          <DeviceDimmer v-if="device.type=='dimmer' && (device.type == golbal.typeCur || golbal.typeCur=='all' || golbal.typeCur=='light')" v-bind:key="device.id" v-bind:device="device" v-bind:touchAction="touchAction"></DeviceDimmer>
           <DeviceAC v-if="device.type=='ac' && (device.type == golbal.typeCur || golbal.typeCur=='all')" v-bind:key="device.id" v-bind:device="device"></DeviceAC>
           <DeviceScene v-if="device.type=='scene' && (device.type == golbal.typeCur || golbal.typeCur=='all')" v-bind:key="device.id" v-bind:device="device" ></DeviceScene>
+          <DeviceHeating v-if="device.type=='heating' && (device.type == golbal.typeCur || golbal.typeCur=='all' || golbal.typeCur=='ac')" v-bind:key="device.id" v-bind:device="device"></DeviceHeating>
+          <DeviceFan v-if="device.type=='fan' && (device.type == golbal.typeCur || golbal.typeCur=='all' || golbal.typeCur=='ac')" v-bind:key="device.id" v-bind:device="device"></DeviceFan>
         </template>
       </div>
     </div>
@@ -45,6 +47,8 @@ import DeviceCurtain from '../components/DeviceCurtain';
 import DeviceDimmer from '../components/DeviceDimmer';
 import DeviceAC from '../components/DeviceAC';
 import DeviceScene from '../components/DeviceScene';
+import DeviceHeating from '../components/DeviceHeating';
+import DeviceFan from '../components/DeviceFan';
 
 export default {
   components: {
@@ -53,12 +57,15 @@ export default {
     DeviceDimmer,
     DeviceAC,
     DeviceScene,
+    DeviceHeating,
+    DeviceFan,
   },
 
 	data () {
 		return {
       heightRoom:window.innerHeight-195,
-      isGallery:true,
+      touchAction:{isDown:false},
+      ul_width:200,
     }
 	},
   props: ['golbal'],
@@ -71,15 +78,47 @@ export default {
       room.active=true;
       this.golbal.roomCur=room;
 
+      MyFunction.sendQueryDeviceStatus();
       MyFunction.getTypeStatus();
+      console.log(this.hasType('light'));
     },
 
 		typeClick(type){
       this.golbal.typeCur=type;
     },
-    
+    hasType(type){
+      if(type=='all')return true;
+      if(this.golbal.roomCur==null)return false;
+      if(this.golbal.roomCur.devices==null)return false;
+      for(var i=0;i<this.golbal.roomCur.devices.length;i++){
+        var device=this.golbal.roomCur.devices[i];
+        if(device.type == type){
+          return true;
+        }
+      }
+      return false;
+    },
+    /** dict=1 左滑动 
+     *  dict=2 右滑动 */
+    onSwipe:function(dict){
+      var that=this;
+      
+      setTimeout(function(){
+        console.log("on Swipe" + that.touchAction.isDown);
+        if(!that.touchAction.isDown){
+          if(dict==1){
+            that.onSwipeLeft();
+          }else if(dict==2){
+            that.onSwipeRight();
+          }
+        }
+        that.touchAction.isDown=false;
+      },200);
+      
+    },
     /** 左滑动 */
     onSwipeLeft: function () {  
+      //console.log("on Swipe");
       var j=0;
       for(var i=0;i<this.golbal.floorCur.rooms.length;i++){
         var r=this.golbal.floorCur.rooms[i];
@@ -94,6 +133,7 @@ export default {
  
     /** 右滑动 */
     onSwipeRight: function () {
+      //console.log("on Swipe");
       var j=0;
       for(var i=0;i<this.golbal.floorCur.rooms.length;i++){
         var r=this.golbal.floorCur.rooms[i];
@@ -105,10 +145,30 @@ export default {
       if(j>0)j=j-1;
       this.roomClick(this.golbal.floorCur.rooms[j]);
     },
+    setView:function(isGallery){
+      this.golbal.isGallery=isGallery;
+      MyFunction.saveSetting();
+    },
+    resetUlWidth:function(){
+      var ul=this.$refs.ul_room;
+      var w=0;
+      for(var i=0;i<ul.children.length;i++){
+        w+=ul.children[i].clientWidth+2;
+      }
+      this.ul_width=w;
+      return w;
+    }
 	},
   mounted(){
     this.golbal.showButtonFloor=true;
     this.golbal.menuCur='room';
-  }
+    
+    MyFunction.sendQueryDeviceStatus();
+    //this.$refs.ul_room.children[0].clientWidth
+    this.resetUlWidth();
+  },
+  updated(){
+    this.resetUlWidth();
+  },
 }
 </script>

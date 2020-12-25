@@ -1,7 +1,7 @@
 <template>
-<div class="divDevice" @click="drawerClick(device)">
+<div class="divDevice">
     <div class="divFavorite" @click.stop="favoriteClick(device)"><i class="icon-favoritesfilling" v-bind:class="{iconC:device.isFavorite}"></i></div>
-    <div class="divIcon"><i v-bind:class="device.icon"></i></div>
+    <div class="divIcon" @touchend="drawerClick(device)"><i v-bind:class="device.icon"></i></div>
     <div class="divInfo">
         <span class="spanDeviceName">{{device.name}}</span>
         <span class="spanDeviceSummary">{{device.summary}}</span>
@@ -32,7 +32,7 @@
                         <div>
                             <span class="spanTitle">请选择风速</span>
                             <ul>
-                                <li @click.stop="fanClick(device,'0')"><i class="icon-abc"></i><span>自动</span></li>
+                                <!-- <li @click.stop="fanClick(device,'0')"><i class="icon-abc"></i><span>自动</span></li> -->
                                 <li @click.stop="fanClick(device,'1')"><i class="icon-propeller"></i><span>低速</span></li>
                                 <li @click.stop="fanClick(device,'2')"><i class="icon-screw"></i><span>中速</span></li>
                                 <li @click.stop="fanClick(device,'3')"><i class="icon-screw2"></i><span>高速</span></li>
@@ -43,9 +43,9 @@
                         </el-button>
                     </el-popover>
                 </div>
-                <div @click.stop="modeClick(device,'制热')"><i class="icon-sun" v-bind:class="{iconC:device.mode=='制热'}"></i></div>
-                <div @click.stop="modeClick(device,'制冷')"><i class="icon-kongdiao" v-bind:class="{iconC:device.mode=='制冷'}"></i></div>
-                <div @click.stop="modeClick(device,'送风')"><i class="icon-fan" v-bind:class="{iconC:device.mode=='送风'}"></i></div>
+                <div @click.stop="modeClick(device,'制热')"><i class="icon-sun" v-bind:class="{iconC:device.mode=='制热'&&device.isOn}"></i></div>
+                <div @click.stop="modeClick(device,'制冷')"><i class="icon-kongdiao" v-bind:class="{iconC:device.mode=='制冷'&&device.isOn}"></i></div>
+                <div @click.stop="modeClick(device,'送风')"><i class="icon-fan" v-bind:class="{iconC:device.mode=='送风'&&device.isOn}"></i></div>
                 <div class="divDrawerACModeC">
                     <el-popover placement="top" width="50" trigger="click" v-model="visibleLock" popper-class="popoverAC" :disabled="!device.isOn">
                         <div>
@@ -77,7 +77,7 @@ export default {
 		return {
             drawer: false,
             direction: 'btt',
-            heightDrawer:window.innerHeight-95,
+            heightDrawer:window.innerHeight-110,
             visibleFan: false,
             visibleLock: false,
         }
@@ -85,7 +85,8 @@ export default {
 	props: ['device'],
 	methods: {
 		favoriteClick(device){
-			device.isFavorite=!device.isFavorite;
+            device.isFavorite=!device.isFavorite;
+            MyFunction.saveProject();
             //if(!device.isFavorite)device.hits=0;
         },
 		switchClick(device){
@@ -97,20 +98,20 @@ export default {
                 if(device.hits==10)device.isFavorite=true;
             }
             */
-            BaseByteSerializer.sendAction(this.device);
+            BaseByteSerializer.sendACAction(this.device,1);
         },
 		addClick(device){
-            if(device.value<36 && device.isOn){
+            if(device.value<30 && device.isOn){
 			    device.value=device.value+1;
                 device.summary=device.mode + ' ' + device.value + '℃';
-                BaseByteSerializer.sendAction(this.device);
+                BaseByteSerializer.sendACAction(this.device,2);
             }
         },
 		minusClick(device){
-			if(device.value>17 && device.isOn){
+			if(device.value>16 && device.isOn){
 			    device.value=device.value-1;
                 device.summary=device.mode + ' ' + device.value + '℃';
-                BaseByteSerializer.sendAction(this.device);
+                BaseByteSerializer.sendACAction(this.device,2);
             }
         },
         drawerClick(device){
@@ -120,19 +121,22 @@ export default {
             if(device.isOn){
                 device.mode=mode;
                 device.summary=device.mode + ' ' + device.value + '℃';
-                BaseByteSerializer.sendAction(this.device);
+                BaseByteSerializer.sendACAction(this.device,3);
             }
         },
 		fanClick(device,fan){
             device.fan=fan;
             this.visibleFan=false;
-            BaseByteSerializer.sendAction(this.device);
+            BaseByteSerializer.sendACAction(this.device,4);
         },
 		lockClick(device,lock){
             device.lock=lock;
             this.visibleLock=false;
-            BaseByteSerializer.sendAction(this.device);
+            BaseByteSerializer.sendACAction(this.device,5);
         }
-	}
+    },
+    mounted: function () {
+        this.device.summary=this.device.mode + ' ' + this.device.value + '℃';
+    }
 }
 </script>

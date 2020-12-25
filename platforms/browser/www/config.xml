@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.linkscene.app" version="1.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>联克智控</name>
+<widget id="com.linkscene.app" version="1.0.58" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>智慧云联</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>

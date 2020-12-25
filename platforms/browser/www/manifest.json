@@ -1,8 +1,8 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "联克智控",
-  "short_name": "联克智控",
+  "name": "智慧云联",
+  "short_name": "智慧云联",
   "version": "com.linkscene.app",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "author": "Apache Cordova Team",

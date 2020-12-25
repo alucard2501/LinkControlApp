@@ -14,11 +14,13 @@
           <li @click="scanQRCode()"><i class="icon-scanning"></i><span>扫一扫获取配置</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
           <li @click="drawerBlockClick()"><i class="icon-office"></i><span>楼栋管理</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
           <li @click="drawerThemeClick()"><i class="icon-pic"></i><span>主题样式</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
-          <li @click="drawerTestClick()"><i class="icon-wrench"></i><span>调试</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
+          <li v-if="golbal.showDebug" @click="drawerTestClick()"><i class="icon-wrench"></i><span>调试</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
+          <li @touchend="drawerGatewayClick()"><i class="icon-duoyuyan"></i><span>网关</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
+          <li @click="drawerAboutClick()"><i class="icon-home"></i><span>关于</span><div class="divIcon"><i class="icon-arrow1_right"></i></div></li>
         </ul>
       </div>
     </div>
-    <el-drawer title="请选择楼栋" :visible.sync="drawerBlock" direction="btt" :append-to-body="true" custom-class="drawerBlock" :size="heightDrawerBlock+'px'">
+    <!-- <el-drawer title="请选择楼栋" :visible.sync="drawerBlock" direction="btt" :append-to-body="true" custom-class="drawerBlock" :size="heightDrawerBlock+'px'">
       <ul>
         <li v-for="block in golbal.myProject.blocks" v-bind:key="block.id" @click="blockClick(block)">
           <i class="icon-office"></i><span>{{block.name}}</span>
@@ -40,32 +42,16 @@
         </div>
       </div>
     </el-drawer>
-    <el-drawer title="用户调试" :visible.sync="drawerTest" direction="rtl" :append-to-body="true" custom-class="drawerTest" :size="widthDrawerTest+'px'">
-      <el-tabs v-model="tabsTest" type="card" class="divTabs">
-        <el-tab-pane label="参数设置" name="tab1">
-          <el-form ref="form" :model="formTest" label-width="80px" class="formTest">
-            <el-form-item label="服 务 器">
-              <el-input v-model="formTest.server"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button @click="submitTest">绑定</el-button>
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="调试日志" name="tab2">
-          <!-- <div class="divSend">
-            <input type="text" />
-            <div>发送</div>
-          </div> -->
-          <el-button @click="clearLog">清空</el-button>
-          <div class="divSendMessage" :style="'height:'+heightSendMessage+'px;overflow-y:auto'">
-            <ul class="ulLog">
-                <li v-for="log in logs" v-bind:key="log">{{log}}</li>
-            </ul>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
-    </el-drawer>
+    <el-drawer title="日志" :visible.sync="drawerTest" direction="rtl" :append-to-body="true" custom-class="drawerTest" :size="widthDrawerTest+'px'">
+      <el-button @click="clearLog">清空</el-button>
+      <div class="divSendMessage" :style="'width:100%;height:'+heightSendMessage+'px;overflow-y:auto'">
+        <ul class="ulLog">
+          <li v-for="log in logList.logs" v-bind:key="log">{{log}}</li>
+        </ul>
+      </div>
+    </el-drawer> -->
+
+
   </div>
 </template>
 
@@ -79,79 +65,56 @@ export default {
 	data () {
 		return {
       drawerBlock: false,
+      
       heightDrawerBlock:window.innerHeight-159,
+      heightDrawerGateway:window.innerHeight-159,
       drawerTheme: false,
       drawerTest: false,
-      widthDrawerTest:window.innerWidth,
+      
       widthDrawerTheme:window.innerWidth,
       tabsTest: 'tab1',
+      showDebug:false,
       formTest: {
         server: '',
       },
-      heightSendMessage:window.innerHeight-180,
+      
+
+      
       //log:"",
     }
 	},
-  props: ['golbal','logs'],
+  props: ['golbal','logList'],
   methods: {
-    //打开楼栋界面
+    /** 打开楼栋界面 */
     drawerBlockClick(){
-      this.drawerBlock=true;
+      this.golbal.drawerBlock=true;
     },
 
-    //打开主题样式
+    /** 打开网关界面 */
+    drawerGatewayClick(){
+      this.golbal.drawerGateway=true;
+    },
+
+    /** 打开主题样式 */
     drawerThemeClick(){
-      this.drawerTheme=true;
+      this.golbal.drawerTheme=true;
     },
 
-    //点击主题样式
-    themeClick(tips){
-      //更换主题
-      if(this.golbal.themeCur!=tips){
-        document.getElementById("style").attributes[2].value="static/css/style" + tips + ".css";
-      }
 
-      this.golbal.themeCur=tips;
+
+    /** 打开关于界面 */
+    drawerAboutClick(){
+      this.golbal.drawerAbout=true;
+      //this.$router.push({path:'/about'})
     },
-
-    //打开调试界面
+    /** 打开调试界面 */
     drawerTestClick(){
-      this.drawerTest=true;
+      this.golbal.drawerTest=true;
     },
 
-    //点击楼栋
-    blockClick(block){
-      //清空全部楼栋在选属性，当前楼栋选定
-      for(var i=0;i<this.golbal.myProject.blocks.length;i++){
-				var r=this.golbal.myProject.blocks[i];
-				r.active=false;
-			}
-      block.active=true;
-      this.golbal.blockCur=block;
+    
 
-      //选定默认楼层
-      this.golbal.floorCur = this.golbal.blockCur.floors[0];
-      for(var i=0;i<this.golbal.blockCur.floors.length;i++){
-				var r=this.golbal.blockCur.floors[i];
-				if(r.active){
-          this.golbal.floorCur=r;
-        }
-			}
-
-      //选定默认房间
-      this.golbal.roomCur = this.golbal.floorCur.rooms[0];
-      for(var i=0;i<this.golbal.floorCur.rooms.length;i++){
-        var r=this.golbal.floorCur.rooms[i];
-        if(r.active){
-          this.golbal.roomCur=r;
-          MyFunction.getTypeStatus();
-        }
-      }
-
-      this.drawerBlock=false;
-    },
-
-    //获取配置
+    /** 获取配置 */
 		getData(url){
       var that=this;
 			axios.post(url).then(function(response){
@@ -239,41 +202,62 @@ export default {
               alert("获取失败")
           });
     },
+    
+    /** 扫描二维码 */
     scanQRCode(){
+      //测试
       // var b=true;
-      // this.getData('https://app.haodawu.cn/api?action=GET_PROJECT_APP&project_id=3929490');
+      // //有数据地址：
+      // this.getData('https://app.lk-control.com/api?action=GET_PROJECT_APP&project_id=3929497'); 
+      // //客户有问题测试
+      // //this.getData('http://192.168.0.119:3002/api?action=GET_PROJECT_APP&project_id=1d37ce7b-e542-637a-1723-2090ac45ae1f');
+      // //this.getData('https://app.lk-control.com/api?action=GET_PROJECT_APP&project_id=1d37ce7b-e542-637a-1723-2090ac45ae1f');
+      // //公司网关
+      // //this.getData('https://app.lk-control.com/api?action=GET_PROJECT_APP&project_id=20798961-5a36-5c6e-e53b-60ea871376be');
+      // //this.getData('https://app.lk-control.com/api?action=GET_PROJECT_APP&project_id=07ceb348-a649-4622-709a-60eef0245add');
       // console.log("start qrcode");
       // return ;
+
       var that=this;
+      console.log("插件对象: " + cordova.plugins);
+      console.log("二维码插件: " + cordova.plugins.barcodeScanner);
       cordova.plugins.barcodeScanner.scan(
         function (result) {
           // alert("We got a barcode\n" +
           //   "Result: " + result.text + "\n" +
           //   "Format: " + result.format + "\n" +
           //   "Cancelled: " + result.cancelled)
-          var url=result.text.replace("linkcontrol","http");
-          //var response = await axios.post('http://home.ivor-electric.com:3002/api?action=GET_PROJECT_DATA&project_id=3929486');
+          if(!result.cancelled){
+            var url=result.text.replace("linkcontrol","http");
+            //alert(JSON.stringify(result));
+            //console.log(result);
+            //var response = await axios.post('http://home.ivor-electric.com:3002/api?action=GET_PROJECT_DATA&project_id=3929486');
+            
+            //globalVariable.log("url:" + url);
+            console.log(url);
+            that.getData(url);
+          }else{
+            alert("操作取消")
+          }
           
-          //globalVariable.log("url:" + url);
-          console.log(url);
-          that.getData(url);
         },
         function (error) {
           alert(error)
         }
       );
     },
-    //提交绑定
+    
+    /** 提交绑定 */
     submitTest() {
       this.golbal.testServer=this.formTest.server;
     },
-    clearLog(){
-      //MyFunction.log("测试")
-      this.logs=[];
-    },
+
+
+
     // onLog(text){
     //   this.log=text+ "\n" + this.log;
     // }
+
 	},
   mounted(){
     this.golbal.showButtonFloor=false;

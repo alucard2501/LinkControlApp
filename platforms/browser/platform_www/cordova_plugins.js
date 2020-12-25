@@ -1,6 +1,20 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
 module.exports = [
     {
+        "file": "plugins/cordova-plugin-splashscreen/src/browser/SplashScreenProxy.js",
+        "id": "cordova-plugin-splashscreen.SplashScreenProxy",
+        "pluginId": "cordova-plugin-splashscreen",
+        "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+        "id": "cordova-plugin-splashscreen.SplashScreen",
+        "pluginId": "cordova-plugin-splashscreen",
+        "clobbers": [
+            "navigator.splashscreen"
+        ]
+    },
+    {
         "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
         "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
         "pluginId": "phonegap-plugin-barcodescanner",
@@ -15,17 +29,11 @@ module.exports = [
         "runs": true
     },
     {
-        "file": "plugins/cordova-plugin-splashscreen/src/browser/SplashScreenProxy.js",
-        "id": "cordova-plugin-splashscreen.SplashScreenProxy",
-        "pluginId": "cordova-plugin-splashscreen",
-        "runs": true
-    },
-    {
-        "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
-        "id": "cordova-plugin-splashscreen.SplashScreen",
-        "pluginId": "cordova-plugin-splashscreen",
+        "file": "plugins/cordova-plugin-chrome-apps-sockets-udp/sockets.udp.js",
+        "id": "cordova-plugin-chrome-apps-sockets-udp.sockets.udp",
+        "pluginId": "cordova-plugin-chrome-apps-sockets-udp",
         "clobbers": [
-            "navigator.splashscreen"
+            "chrome.sockets.udp"
         ]
     },
     {
@@ -52,22 +60,30 @@ module.exports = [
         "pluginId": "cordova-plugin-chrome-apps-common"
     },
     {
-        "file": "plugins/cordova-plugin-chrome-apps-sockets-udp/sockets.udp.js",
-        "id": "cordova-plugin-chrome-apps-sockets-udp.sockets.udp",
-        "pluginId": "cordova-plugin-chrome-apps-sockets-udp",
+        "file": "plugins/cordova-plugin-networkinterface/www/networkinterface.js",
+        "id": "cordova-plugin-networkinterface.networkinterface",
+        "pluginId": "cordova-plugin-networkinterface",
         "clobbers": [
-            "chrome.sockets.udp"
+            "window.networkinterface"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-networkinterface/src/browser/networkinterfaceProxy.js",
+        "id": "cordova-plugin-networkinterface.networkinterfaceProxy",
+        "pluginId": "cordova-plugin-networkinterface",
+        "runs": true
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
-    "cordova-plugin-whitelist": "1.3.4",
-    "phonegap-plugin-barcodescanner": "8.1.0",
     "cordova-plugin-splashscreen": "6.0.0",
+    "phonegap-plugin-barcodescanner": "8.1.0",
+    "cordova-plugin-chrome-apps-sockets-udp": "1.3.0",
     "cordova-plugin-chrome-apps-common": "1.0.7",
-    "cordova-plugin-chrome-apps-sockets-udp": "1.3.0"
+    "cordova-plugin-whitelist": "1.3.4",
+    "cordova-plugin-networkinterface": "2.0.0",
+    "cordova-plugin-wkwebview-engine": "1.2.1"
 }
 // BOTTOM OF METADATA
 });

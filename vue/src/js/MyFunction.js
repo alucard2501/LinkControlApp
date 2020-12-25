@@ -1,10 +1,12 @@
+import BaseByteSerializer from './BaseByteSerializer'
+
 export default {
     //全局变量
     devicesAll:null,
     MyProject:null,
     golbal:null,
-    logList:[],
     root:null,
+
     /**字节转十六进制字符 */
     bytes2hex:function(bytes){
         var result="";
@@ -57,39 +59,100 @@ export default {
 
     /** 加载设置开启情况 */
     getTypeStatus:function(){
-        this.golbal.type[1].isOn=false;
-        this.golbal.type[2].isOn=false;
-        this.golbal.type[3].isOn=false;
-        this.golbal.type[4].isOn=false;
+        //设备类型
+        for(var i=1;i<=4;i++){
+            this.golbal.type[i].isOn=false;
+        }
         for(var i=0;i<this.golbal.roomCur.devices.length;i++){
             var r=this.golbal.roomCur.devices[i];
             switch(r.type){
                 case 'light':
-                if(r.isOn)this.golbal.type[1].isOn=true;
-                break;
+                    if(r.isOn)this.golbal.type[1].isOn=true;
+                    break;
                 case 'dimmer':
-                if(r.value>0)this.golbal.type[1].isOn=true;
-                break;
+                    if(r.value>0)this.golbal.type[1].isOn=true;
+                    break;
                 case 'curtain':
-                if(r.value==100)this.golbal.type[2].isOn=true;
-                break;
+                    if(r.value==100)this.golbal.type[2].isOn=true;
+                    break;
                 case 'ac':
-                if(r.isOn)this.golbal.type[3].isOn=true;
-                break;
+                    if(r.isOn)this.golbal.type[3].isOn=true;
+                    break;
+                case 'heating':
+                    if(r.isOn)this.golbal.type[3].isOn=true;
+                    break;
+                case 'fan':
+                    if(r.isOn)this.golbal.type[3].isOn=true;
+                    break;
                 case 'scene':
-                if(r.isOn)this.golbal.type[4].isOn=true;
-                break;
+                    if(r.isOn)this.golbal.type[4].isOn=true;
+                    break;
+            }
+        }
+
+        //点亮楼层、房间
+        for(var i=0;i<this.golbal.blockCur.floors.length;i++){
+            this.golbal.blockCur.floors[i].isOn=false;
+        }
+        for(var i=0;i<this.golbal.blockCur.floors.length;i++){
+            var c_floor = this.golbal.blockCur.floors[i];
+            for(var j=0;j<c_floor.rooms.length;j++){
+                var c_room = c_floor.rooms[j];
+                c_room.isOn=false;
+                for(var k=0;k<c_room.devices.length;k++){
+                    var c_device = c_room.devices[k];
+                    switch(c_device.type){
+                        case 'dimmer':
+                            if(c_device.value>0){
+                                c_room.isOn=true;
+                                c_floor.isOn=true;
+                            }
+                            break;
+                        case 'curtain':
+                            if(c_device.value==100){
+                                c_room.isOn=true;
+                                c_floor.isOn=true;
+                            }
+                            break;
+                        default:
+                            if(c_device.isOn){
+                                c_room.isOn=true;
+                                c_floor.isOn=true;
+                            }
+                            break;
+                    }
+                }
             }
         }
     },
     
+    /** 当前房间的全部设置主动请求状态 */
+    sendQueryDeviceStatus:function(){
+        var sended=[];
+        //{areacode:1,addr:1}
+        for(var i=0;i<this.golbal.roomCur.devices.length;i++){
+            var b=true;
+            var c_device=this.golbal.roomCur.devices[i];
+            for(var j=0;j<sended.length;j++){
+                if(parseInt(c_device.areacode)==sended[j].areacode && parseInt(c_device.addr)==sended[j].addr){
+                    b=false;
+                }
+            }
+            if(b){
+                setTimeout(this.sendQueryDeviceStatusOne,i*100,c_device);
+                sended.push({areacode:parseInt(c_device.areacode),addr:parseInt(c_device.addr)});
+            }
+        }
+    },
+    sendQueryDeviceStatusOne(device){
+        BaseByteSerializer.queryDeviceStatus(device);
+    },
     log:function(message){
       //console.log(this.root);
       console.log(message);
-      var log_date=new Date();
-      this.logList.push(log_date.getHours() + ":" + log_date.getMinutes()+":"+log_date.getSeconds() + " " +  message);
       if(this.root!=null){
-        this.root.$data.logList=this.logList;
+        var log_date=new Date();
+        this.root.$data.logList.logs.unshift(log_date.getHours() + ":" + log_date.getMinutes()+":"+log_date.getSeconds() + " " +  message);
       }
     },
     bytes2hex:function(bytes){
@@ -98,15 +161,15 @@ export default {
             result=result + Buffer.from([bytes[i]]).toString('hex')+ " ";
         }
         return result;
-      },
-      bytes2hexNoSpace:function (bytes){
+    },
+    bytes2hexNoSpace:function (bytes){
         var result="";
         for(var i=0;i<bytes.length;i++){
             result=result + Buffer.from([bytes[i]]).toString('hex')+ "";
         }
         return result;
-      },
-      hexStringToBytes:function (hexString) {
+    },
+    hexStringToBytes:function (hexString) {
         if (hexString == null || hexString.length==0) {
             return null;
         }
@@ -130,5 +193,22 @@ export default {
             d.push(parseInt(hexs[i],16))
         }
         return Buffer.from(d);
-      },
+    },
+    /**用于生成uuid*/
+    uuid:function(){
+        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    },
+    saveProject:function(){
+        var storage = window.localStorage;
+        storage.setItem("myProject", JSON.stringify(this.MyProject));
+        console.log("saved");
+    },
+    saveSetting:function(){
+        var storage = window.localStorage;
+        storage.setItem("themeCur",this.golbal.themeCur);
+        storage.setItem("isGallery",(this.golbal.isGallery)?1:0);
+    }
+}
+function S4() {
+    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 }

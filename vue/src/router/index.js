@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import favorite from '@/pages/favorite'
 import room from '@/pages/room'
 import user from '@/pages/user'
+import about from '@/pages/about'
 import message from '@/pages/message'
 
 Vue.use(Router)
@@ -11,8 +12,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'favorite',
-      component: favorite
+      name: 'room',
+      component: room
     },
     {
       path: '/favorite',
@@ -28,6 +29,11 @@ export default new Router({
       path: '/user',
       name: 'user',
       component: user
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: about
     },
     {
       path: '/message',
